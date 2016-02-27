@@ -1,0 +1,21 @@
+﻿<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>
+            <td>Percentage</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="task in tasks">
+            <td>{{task.Name}}</td>
+            <td>{{task.Description}}</td>
+            <td>{{task.PercentageDone}}</td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <input class="input-sm" ng-model="newTask.Name" type="text" placeholder="Name" />
+    <input class="input-sm" ng-model="newTask.Description" type="text" placeholder="Description" />
+    <button ng-click="createTask()" class="btn btn-success">Add</button>
+</div>
