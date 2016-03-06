@@ -3,6 +3,7 @@ using TaskManagement.Persistence.Implementations;
 using Microsoft.Practices.Unity;
 using System;
 using TaskManagement.API.DataLayer.Models;
+using System.Collections;
 
 namespace TaskManagement.Persistence
 {
@@ -10,6 +11,35 @@ namespace TaskManagement.Persistence
     {
         [Dependency]
         public Entities Context { get; set; }
+        //private Hashtable _repositories;
+        //private DbContextCreator _contextCreator;
+        //private Entities _context;
+
+        //public UnitOfWork()
+        //{
+        //    _contextCreator = new DbContextCreator();
+        //}
+
+        //public IRepository<TEntity> Repository<TEntity>() where TEntity : class
+        //{
+        //    if (_repositories == null)
+        //    {
+        //        _repositories = new Hashtable();
+        //    }
+
+        //    var type = typeof(TEntity).FullName;
+
+        //    if (_repositories.ContainsKey(type))
+        //    {
+        //        return (IRepository<TEntity>)_repositories[type];
+        //    }
+        //    _context = _contextCreator.createServicesContext();
+        //    var repositoryType = typeof(GenericRepository<>);
+        //    _repositories.Add(type, Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),
+        //        _context));
+
+        //    return (IRepository<TEntity>)_repositories[type];
+        //}
 
         private GenericRepository<Task> _tasksRepository;
         public GenericRepository<Task> TaskRepository
@@ -22,6 +52,48 @@ namespace TaskManagement.Persistence
                     this._tasksRepository.Context = Context;
                 }
                 return this._tasksRepository;
+            }
+        }
+
+        private GenericRepository<FriendRequest> _friendRequestsRepository;
+        public GenericRepository<FriendRequest> FriendRequestsRepository
+        {
+            get
+            {
+                if (this._friendRequestsRepository == null)
+                {
+                    this._friendRequestsRepository = new GenericRepository<FriendRequest>();
+                    this._friendRequestsRepository.Context = Context;
+                }
+                return this._friendRequestsRepository;
+            }
+        }
+
+        private GenericRepository<Friendship> _friendsRepository;
+        public GenericRepository<Friendship> FriendsRepository
+        {
+            get
+            {
+                if (this._friendsRepository == null)
+                {
+                    this._friendsRepository = new GenericRepository<Friendship>();
+                    this._friendsRepository.Context = Context;
+                }
+                return this._friendsRepository;
+            }
+        }
+
+        private GenericRepository<Comment> _commentsRepository;
+        public GenericRepository<Comment> CommentsRepository
+        {
+            get
+            {
+                if (this._commentsRepository == null)
+                {
+                    this._commentsRepository = new GenericRepository<Comment>();
+                    this._commentsRepository.Context = Context;
+                }
+                return this._commentsRepository;
             }
         }
 

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using TaskManagement.App_Start;
+using System.Web.Http.Cors;
 
 namespace TaskManagement
 {
@@ -24,6 +25,8 @@ namespace TaskManagement
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            EnableCrossSiteRequests(config);
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
@@ -33,6 +36,15 @@ namespace TaskManagement
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
             //jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        }
+
+        private static void EnableCrossSiteRequests(HttpConfiguration config)
+        {
+            var cors = new EnableCorsAttribute(
+                origins: "*",
+                headers: "*",
+                methods: "*");
+            config.EnableCors(cors);
         }
     }
 }

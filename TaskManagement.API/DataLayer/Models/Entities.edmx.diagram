@@ -11,6 +11,16 @@
         <AssociationConnector Association="TaskManagementDatabaseModel.FK_Tasks_UserProfile" ManuallyRouted="false" />
         <AssociationConnector Association="TaskManagementDatabaseModel.FK_UsersInTasks_Tasks" ManuallyRouted="false" />
         <AssociationConnector Association="TaskManagementDatabaseModel.FK_UsersInTasks_UserProfile" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TaskManagementDatabaseModel.FriendRequest" Width="1.5" PointX="3" PointY="6.75" />
+        <EntityTypeShape EntityType="TaskManagementDatabaseModel.Friendship" Width="1.5" PointX="3" PointY="9.625" />
+        <EntityTypeShape EntityType="TaskManagementDatabaseModel.Comment" Width="1.5" PointX="8.25" PointY="1.25" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles1" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_Friendships_UserProfiles" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_Friendships_UserProfiles1" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_Comments_Tasks" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_Tasks_UserProfiles" />
+        <AssociationConnector Association="TaskManagementDatabaseModel.FK_Comments_UserProfiles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

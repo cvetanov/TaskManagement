@@ -28,5 +28,8 @@ namespace TaskManagement.API.DataLayer.Models
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<UsersInTask> UsersInTasks { get; set; }
+        public virtual DbSet<FriendRequest> FriendRequests { get; set; }
+        public virtual DbSet<Friendship> Friendships { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
     }
 }

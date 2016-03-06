@@ -1,20 +1,32 @@
-﻿<table class="table table-bordered table-striped">
+﻿<h4 ng-show="showTable"><strong>Ongoing tasks</strong></h4>
+<table ng-show="showTable" class="table table-bordered table-striped">
     <thead>
         <tr>
             <td>Name</td>
             <td>Description</td>
-            <td>Percentage</td>
+            <td>Other users</td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
         <tr ng-repeat="task in tasks">
             <td>{{task.Name}}</td>
             <td>{{task.Description}}</td>
-            <td>{{task.PercentageDone}}</td>
+            <td>&nbsp;<span ng-show="task.UsersInTasks.length > 0" class="badge">{{task.UsersInTasks.length}}</span></td>
+            <td>
+                <button class="btn btn-sm btn-primary" ng-click="editTask(task.Id)"><i class="fa fa-pencil-square-o"></i></button>
+                <button class="btn btn-sm btn-danger" ng-click="deleteTask(task.Id)"><i class="fa fa-times"></i></button>
+            </td>
         </tr>
     </tbody>
 </table>
+<div ng-show="!showTable" class="alert alert-info">
+  {{showTableMessage}}
+</div>
+<br/>
 <div>
+    <h4><strong>Add a new task<strong></h4>
+    <br/>
     <input class="input-sm" ng-model="newTask.Name" type="text" placeholder="Name" />
     <input class="input-sm" ng-model="newTask.Description" type="text" placeholder="Description" />
     <button ng-click="createTask()" class="btn btn-success">Add</button>

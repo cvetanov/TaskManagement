@@ -1,8 +1,13 @@
 ﻿'use strict';
-app.controller('tasksController', ['$scope', 'tasksService', 'authService', function ($scope, tasksService, authService) {
-
+app.controller('tasksController', ['$scope', 'tasksService', 'authService', '$location', 'toastr',
+        function ($scope, tasksService, authService, $location, toastr) {
     $scope.tasks = {};
-    
+
+    var resetTableMessage = function() {
+        $scope.showTable = true;
+        $scope.showTableMessage = "";
+    }
+    resetTableMessage();
 
     var initNewTask = function() {
         $scope.newTask = {
@@ -17,18 +22,40 @@ app.controller('tasksController', ['$scope', 'tasksService', 'authService', func
     var refreshTasks = function() {
         tasksService.getTasks().then(function success(response) {
             $scope.tasks = response.data;
-            console.log(response.data);
+            if (response.data.length == 0) {
+                $scope.showTable = false;
+                $scope.showTableMessage = "You have no tasks. Add a new one!";
+            }
+            else {
+                resetTableMessage();
+            }
         }, function failed(response) {
-            console.log('error');
+            
         });
     }
     refreshTasks();
 
     $scope.createTask = function () {
         tasksService.createTask($scope.newTask).then(function success(response) {
+            toastr.success("Task created.", "Success!");
             refreshTasks();
             initNewTask();
+        }, function failed(response) {
+            toastr.error("Something went wrong.", "Error!");
         });
+    };
+
+    $scope.editTask = function(id) {
+        $location.path("/tasks/edit/" + id);
+    };
+
+    $scope.deleteTask = function(id) {
+        tasksService.deleteTask(id).then(function success(response) {
+            toastr.success("Task deleted.", "Success!");
+            refreshTasks();
+        }, function failure(response) {
+            toastr.error("Failed to delete task.", "Error!");
+        })
     };
 
 }]);

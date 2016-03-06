@@ -58,9 +58,21 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\controllers\friendsController.js" />
+    <Content Include="app\controllers\newFriendsController.js" />
     <Content Include="app\controllers\tasksController.js" />
+    <Content Include="app\controllers\tasksEditController.js" />
+    <Content Include="app\directives\friend.html" />
+    <Content Include="app\directives\friendRequest.html" />
+    <Content Include="app\directives\user.html" />
+    <Content Include="app\services\friendsService.js" />
     <Content Include="app\services\tasksService.js" />
+    <Content Include="app\views\friends.html" />
+    <Content Include="app\views\newFriends.html" />
     <Content Include="app\views\tasks.html" />
+    <Content Include="app\views\tasksEdit.html" />
+    <Content Include="Content\angular-toastr.css" />
+    <Content Include="Content\angular-toastr.min.css" />
     <Content Include="Scripts\angular-toastr.js" />
     <Content Include="Scripts\angular-toastr.min.js" />
     <Content Include="Scripts\angular-toastr.tpls.js" />
@@ -91,14 +103,11 @@
     <Content Include="app\controllers\homeController.js" />
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
-    <Content Include="app\controllers\ordersController.js" />
     <Content Include="app\controllers\signupController.js" />
     <Content Include="app\services\authInterceptorService.js" />
     <Content Include="app\services\authService.js" />
-    <Content Include="app\services\ordersService.js" />
     <Content Include="app\views\home.html" />
     <Content Include="app\views\login.html" />
-    <Content Include="app\views\orders.html" />
     <Content Include="app\views\signup.html" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />

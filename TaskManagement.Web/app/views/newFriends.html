@@ -1,0 +1,14 @@
+<div ng-show="showNonFriends">
+	<h3>Users</h3>
+	<div class="row" ng-repeat="nonFriendsChunk in nonFriendsChunks">
+		<div class="col-md-3" user-directive ng-repeat="user in nonFriendsChunk"></div>
+	</div>
+</div>
+
+<br />
+<div ng-show="showFriendRequests">
+	<h3>Friend requests</h3>
+	<div class="row" ng-repeat="friendRequestChunk in friendRequestsChunks">
+		<div class="col-md-3" friend-request-directive ng-repeat="friendRequest in friendRequestChunk"></div>
+	</div>
+</div>

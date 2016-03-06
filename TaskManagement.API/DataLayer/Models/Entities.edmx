@@ -5,6 +5,34 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="TaskManagementDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="Date" Type="date" />
+          <Property Name="TaskId" Type="int" />
+        </EntityType>
+        <EntityType Name="FriendRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FromUserId" Type="int" />
+          <Property Name="ToUserId" Type="int" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Friendships">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User1" Type="int" />
+          <Property Name="User2" Type="int" />
+          <Property Name="DateStart" Type="date" />
+        </EntityType>
         <EntityType Name="Tasks">
           <Key>
             <PropertyRef Name="Id" />
@@ -12,8 +40,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OwnerId" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="100" />
-          <Property Name="PercentageDone" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="UserClosedId" Type="int" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Status" Type="bit" />
         </EntityType>
         <EntityType Name="UserProfiles">
           <Key>
@@ -33,6 +62,78 @@
           <Property Name="Active" Type="bit" />
           <Property Name="LastChange" Type="datetime" />
         </EntityType>
+        <Association Name="FK_Comments_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_UserProfiles">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FriendRequests_UserProfiles">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="FriendRequests" Type="Self.FriendRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FriendRequests">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FriendRequests_UserProfiles1">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="FriendRequests" Type="Self.FriendRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FriendRequests">
+              <PropertyRef Name="ToUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Friendships_UserProfiles">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="Friendships" Type="Self.Friendships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Friendships">
+              <PropertyRef Name="User1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Friendships_UserProfiles1">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="Friendships" Type="Self.Friendships" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Friendships">
+              <PropertyRef Name="User2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Tasks_UserProfile">
           <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="1" />
           <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
@@ -42,6 +143,18 @@
             </Principal>
             <Dependent Role="Tasks">
               <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_UserProfiles">
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="UserClosedId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -70,10 +183,41 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="TaskManagementDatabaseModelStoreContainer">
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FriendRequests" EntityType="Self.FriendRequests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Friendships" EntityType="Self.Friendships" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfiles" EntityType="Self.UserProfiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UsersInTasks" EntityType="Self.UsersInTasks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Comments_Tasks" Association="Self.FK_Comments_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_UserProfiles" Association="Self.FK_Comments_UserProfiles">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FriendRequests_UserProfiles" Association="Self.FK_FriendRequests_UserProfiles">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="FriendRequests" EntitySet="FriendRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FriendRequests_UserProfiles1" Association="Self.FK_FriendRequests_UserProfiles1">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="FriendRequests" EntitySet="FriendRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Friendships_UserProfiles" Association="Self.FK_Friendships_UserProfiles">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="Friendships" EntitySet="Friendships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Friendships_UserProfiles1" Association="Self.FK_Friendships_UserProfiles1">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="Friendships" EntitySet="Friendships" />
+          </AssociationSet>
           <AssociationSet Name="FK_Tasks_UserProfile" Association="Self.FK_Tasks_UserProfile">
+            <End Role="UserProfiles" EntitySet="UserProfiles" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_UserProfiles" Association="Self.FK_Tasks_UserProfiles">
             <End Role="UserProfiles" EntitySet="UserProfiles" />
             <End Role="Tasks" EntitySet="Tasks" />
           </AssociationSet>
@@ -97,10 +241,13 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OwnerId" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PercentageDone" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Owner" Relationship="Self.FK_Tasks_UserProfile" FromRole="Tasks" ToRole="UserProfiles" />
           <NavigationProperty Name="UsersInTasks" Relationship="Self.FK_UsersInTasks_Tasks" FromRole="Tasks" ToRole="UsersInTasks" />
+          <Property Name="UserClosedId" Type="Int32" />
+          <Property Name="Status" Type="Boolean" />
+          <NavigationProperty Name="Comments" Relationship="TaskManagementDatabaseModel.FK_Comments_Tasks" FromRole="Task" ToRole="Comment" />
+          <NavigationProperty Name="UserClosed" Relationship="TaskManagementDatabaseModel.FK_Tasks_UserProfiles" FromRole="Task" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
@@ -110,6 +257,11 @@
           <Property Name="Username" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="OwnedTasks" Relationship="Self.FK_Tasks_UserProfile" FromRole="UserProfiles" ToRole="Tasks" />
           <NavigationProperty Name="SharedTasks" Relationship="Self.FK_UsersInTasks_UserProfile" FromRole="UserProfiles" ToRole="UsersInTasks" />
+          <NavigationProperty Name="SentFriendRequests" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles" FromRole="UserProfile" ToRole="FriendRequest" />
+          <NavigationProperty Name="ReceivedFriendRequests" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles1" FromRole="UserProfile" ToRole="FriendRequest" />
+          <NavigationProperty Name="Friendships" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles" FromRole="UserProfile" ToRole="Friendship" />
+          <NavigationProperty Name="Friendships1" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles1" FromRole="UserProfile" ToRole="Friendship" />
+          <NavigationProperty Name="Comments" Relationship="TaskManagementDatabaseModel.FK_Comments_UserProfiles" FromRole="UserProfile" ToRole="Comment" />
         </EntityType>
         <EntityType Name="UsersInTask">
           <Key>
@@ -176,7 +328,156 @@
             <End Role="UserProfiles" EntitySet="UserProfiles" />
             <End Role="UsersInTasks" EntitySet="UsersInTasks" />
           </AssociationSet>
+          <EntitySet Name="FriendRequests" EntityType="TaskManagementDatabaseModel.FriendRequest" />
+          <EntitySet Name="Friendships" EntityType="TaskManagementDatabaseModel.Friendship" />
+          <EntitySet Name="Comments" EntityType="TaskManagementDatabaseModel.Comment" />
+          <AssociationSet Name="FK_FriendRequests_UserProfiles" Association="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="FriendRequest" EntitySet="FriendRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FriendRequests_UserProfiles1" Association="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="FriendRequest" EntitySet="FriendRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Friendships_UserProfiles" Association="TaskManagementDatabaseModel.FK_Friendships_UserProfiles">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Friendship" EntitySet="Friendships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Friendships_UserProfiles1" Association="TaskManagementDatabaseModel.FK_Friendships_UserProfiles1">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Friendship" EntitySet="Friendships" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_Tasks" Association="TaskManagementDatabaseModel.FK_Comments_Tasks">
+            <End Role="Task" EntitySet="Tasks" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_UserProfiles" Association="TaskManagementDatabaseModel.FK_Tasks_UserProfiles">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Task" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_UserProfiles" Association="TaskManagementDatabaseModel.FK_Comments_UserProfiles">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="FriendRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FromUserId" Type="Int32" />
+          <Property Name="ToUserId" Type="Int32" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="FromUser" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles" FromRole="FriendRequest" ToRole="UserProfile" />
+          <NavigationProperty Name="ToUser" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles1" FromRole="FriendRequest" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Friendship">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User1" Type="Int32" />
+          <Property Name="User2" Type="Int32" />
+          <Property Name="DateStart" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="UserProfile2" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles" FromRole="Friendship" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles1" FromRole="Friendship" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="TaskId" Type="Int32" />
+          <NavigationProperty Name="Task" Relationship="TaskManagementDatabaseModel.FK_Comments_Tasks" FromRole="Comment" ToRole="Task" />
+          <NavigationProperty Name="UserProfile" Relationship="TaskManagementDatabaseModel.FK_Comments_UserProfiles" FromRole="Comment" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_FriendRequests_UserProfiles">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.FriendRequest" Role="FriendRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FriendRequest">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FriendRequests_UserProfiles1">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.FriendRequest" Role="FriendRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FriendRequest">
+              <PropertyRef Name="ToUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Friendships_UserProfiles">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.Friendship" Role="Friendship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Friendship">
+              <PropertyRef Name="User1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Friendships_UserProfiles1">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.Friendship" Role="Friendship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Friendship">
+              <PropertyRef Name="User2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_Tasks">
+          <End Type="TaskManagementDatabaseModel.Task" Role="Task" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Task">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_UserProfiles">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.Task" Role="Task" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Task">
+              <PropertyRef Name="UserClosedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_UserProfiles">
+          <End Type="TaskManagementDatabaseModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="TaskManagementDatabaseModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -186,11 +487,12 @@
           <EntitySetMapping Name="Tasks">
             <EntityTypeMapping TypeName="TaskManagementDatabaseModel.Task">
               <MappingFragment StoreEntitySet="Tasks">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserClosedId" ColumnName="UserClosedId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="PercentageDone" ColumnName="PercentageDone" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -211,6 +513,37 @@
                 <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="LastChange" ColumnName="LastChange" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FriendRequests">
+            <EntityTypeMapping TypeName="TaskManagementDatabaseModel.FriendRequest">
+              <MappingFragment StoreEntitySet="FriendRequests">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ToUserId" ColumnName="ToUserId" />
+                <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Friendships">
+            <EntityTypeMapping TypeName="TaskManagementDatabaseModel.Friendship">
+              <MappingFragment StoreEntitySet="Friendships">
+                <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+                <ScalarProperty Name="User2" ColumnName="User2" />
+                <ScalarProperty Name="User1" ColumnName="User1" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="TaskManagementDatabaseModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

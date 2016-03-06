@@ -15,7 +15,7 @@ namespace TaskManagement.Persistence.Implementations
         {
             get
             {
-                return Context;
+                return _context;
             }
             set
             {
@@ -67,7 +67,7 @@ namespace TaskManagement.Persistence.Implementations
 
         public virtual void Remove(TEntity entityToDelete)
         {
-            if (Context.Entry(entityToDelete).State == EntityState.Detached)
+            if (_context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 _entities.Attach(entityToDelete);
             }
@@ -77,14 +77,14 @@ namespace TaskManagement.Persistence.Implementations
         public virtual void Update(TEntity entityToUpdate)
         {
             _entities.Attach(entityToUpdate);
-            Context.Entry(entityToUpdate).State = EntityState.Modified;
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
 
 
         public void Dispose()
         {
-            Context.Dispose();
+            _context.Dispose();
         }
     }
 }

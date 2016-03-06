@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 app.controller('loginController', ['$scope', '$location', 'authService', function ($scope, $location, authService) {
 
     $scope.loginData = {
@@ -12,7 +12,7 @@ app.controller('loginController', ['$scope', '$location', 'authService', functio
 
         authService.login($scope.loginData).then(function (response) {
 
-            $location.path('/tasks');
+            $location.path('/home');
 
         },
          function (err) {
@@ -20,4 +20,4 @@ app.controller('loginController', ['$scope', '$location', 'authService', functio
          });
     };
 
-}]);
+}]);   

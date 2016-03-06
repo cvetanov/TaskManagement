@@ -1,0 +1,6 @@
+<div ng-show="showFriends">
+	<h3>My friends</h3>
+	<div class="row" ng-repeat="friendsChunk in friendsChunks">
+		<div class="col-md-3" friend-directive ng-repeat="friend in friendsChunk"></div>
+	</div>
+</div>

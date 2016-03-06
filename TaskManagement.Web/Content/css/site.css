@@ -57,3 +57,13 @@ body {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
+
+.label-round {   
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+}
+
+.left-padding {
+    padding-left: 5px;
+}

@@ -1,25 +1,44 @@
 ﻿'use strict';
 app.factory('tasksService', ['$http', function ($http) {
 
-    var serviceBase = 'http://localhost:47860/';
+    var serviceBase = 'http://localhost:47860/api/tasks';
     var tasksServiceFactory = {};
 
-    var _getTasks = function () {
+    var _getTask = function(id) {
+        return $http.get(serviceBase + '/' + id).then(function (result) {
+            return result;
+        });
+    }
 
-        return $http.get(serviceBase + 'api/tasks').then(function (results) {
+    var _getTasks = function () {
+        return $http.get(serviceBase).then(function (results) {
             return results;
         });
     };
 
     var _createTask = function (task) {
-        console.log(task);
-        return $http.post(serviceBase + 'api/tasks', task).then(function (result) {
+        return $http.post(serviceBase, task).then(function (result) {
             return result;
         });
     };
 
+    var _updateTask = function(task) {
+        return $http.put(serviceBase, task).then(function (result) {
+            return result;
+        });
+    };
+
+    var _deleteTask = function(id) {
+        return $http.delete(serviceBase + '/' + id).then(function (result) {
+            return result;
+        });
+    }
+
+    tasksServiceFactory.getTask = _getTask;
     tasksServiceFactory.getTasks = _getTasks;
     tasksServiceFactory.createTask = _createTask;
+    tasksServiceFactory.updateTask = _updateTask;
+    tasksServiceFactory.deleteTask = _deleteTask;
 
     return tasksServiceFactory;
 
