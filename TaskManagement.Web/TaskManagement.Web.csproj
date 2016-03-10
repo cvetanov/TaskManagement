@@ -75,8 +75,6 @@
     <Content Include="app\views\newFriends.html" />
     <Content Include="app\views\tasks.html" />
     <Content Include="app\views\tasksEdit.html" />
-    <Content Include="Content\angular-toastr.css" />
-    <Content Include="Content\angular-toastr.min.css" />
     <Content Include="Scripts\angular-toastr.js" />
     <Content Include="Scripts\angular-toastr.min.js" />
     <Content Include="Scripts\angular-toastr.tpls.js" />
