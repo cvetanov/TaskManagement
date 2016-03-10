@@ -11,35 +11,6 @@ namespace TaskManagement.Persistence
     {
         [Dependency]
         public Entities Context { get; set; }
-        //private Hashtable _repositories;
-        //private DbContextCreator _contextCreator;
-        //private Entities _context;
-
-        //public UnitOfWork()
-        //{
-        //    _contextCreator = new DbContextCreator();
-        //}
-
-        //public IRepository<TEntity> Repository<TEntity>() where TEntity : class
-        //{
-        //    if (_repositories == null)
-        //    {
-        //        _repositories = new Hashtable();
-        //    }
-
-        //    var type = typeof(TEntity).FullName;
-
-        //    if (_repositories.ContainsKey(type))
-        //    {
-        //        return (IRepository<TEntity>)_repositories[type];
-        //    }
-        //    _context = _contextCreator.createServicesContext();
-        //    var repositoryType = typeof(GenericRepository<>);
-        //    _repositories.Add(type, Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)),
-        //        _context));
-
-        //    return (IRepository<TEntity>)_repositories[type];
-        //}
 
         private GenericRepository<Task> _tasksRepository;
         public GenericRepository<Task> TaskRepository

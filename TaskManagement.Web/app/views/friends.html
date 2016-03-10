@@ -4,3 +4,9 @@
 		<div class="col-md-3" friend-directive ng-repeat="friend in friendsChunk"></div>
 	</div>
 </div>
+
+<div ng-show="!showFriends">
+	<h3>You have no friends yet</h3>
+	<br />
+	Add some new friends! &nbsp; <button class="btn btn-info" ng-click="redirectToNewFriends()"><i class="fa fa-users"></i></button>
+</div>

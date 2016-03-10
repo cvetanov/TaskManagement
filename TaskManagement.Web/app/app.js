@@ -49,6 +49,48 @@ app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptorService');
 });
 
+app.value('baseUrl', 'http://localhost:47860/');
+app.value('signalRconnection', $.hubConnection('http://localhost:47860/'));
+
+// if user is already authenticated, connect him to server via web socket using signalR
+app.run(['$rootScope', 'toastr', 'authService', 'signalRconnection', 'friendsService', 
+    function($rootScope, toastr, authService, signalRconnection, friendsService) {
+
+    var friendsHub = signalRconnection.createHubProxy('friendsHub');
+    friendsHub.on('notifyAccept', function(message) {
+        toastr.info(message, "You have a new friend!");
+        $rootScope.$broadcast('refreshFriends');
+    });
+    friendsHub.on('notifyNewFriendRequest', function(message) {
+        toastr.info("You have a new friend request");
+        friendsService.getFriendRequests().then(function success(response) {
+            if (response.data.length > 0) {
+                $rootScope.friendRequestsNotification = response.data.length;
+                $rootScope.$broadcast('refreshFriendRequests');
+            }
+            else {
+                $rootScope.friendRequestsNotification = '';
+            }
+        });
+    });
+    friendsHub.on('notifyFriendRequestRejected', function(message) {
+        $rootScope.$broadcast('refreshFriends');
+    });
+    friendsHub.on('notifyFriendshipDeleted', function(message) {
+        $rootScope.$broadcast('refreshFriends');
+    });
+    
+
+    if (authService.authentication.isAuth) { 
+        signalRconnection.start()
+            .done(function(){ 
+                console.log('SignalR web socket now connected, connection ID = ' + signalRconnection.id); 
+                friendsHub.invoke('subscribe', signalRconnection.id, authService.authentication.userName);
+            })
+            .fail(function(){ console.log('Could not connect'); });
+    }
+}]);
+
 app.directive('friendDirective', function() {
   return {
     templateUrl: '/app/directives/friend.html'
@@ -67,5 +109,17 @@ app.directive('friendRequestDirective', function() {
   };
 });
 
+app.config(function(toastrConfig) {
+  angular.extend(toastrConfig, {
+    autoDismiss: false,
+    containerId: 'toast-container',
+    maxOpened: 0,    
+    newestOnTop: true,
+    positionClass: 'toast-bottom-right',
+    preventDuplicates: false,
+    preventOpenDuplicates: false,
+    target: 'body'
+  });
+});
 
 (window.angular);

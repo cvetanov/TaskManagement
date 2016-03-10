@@ -32,9 +32,9 @@ namespace TaskManagement.Providers
                 }
             }
 
-            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, context.UserName));
+            var identity = new ClaimsIdentity(claims, context.Options.AuthenticationType);
 
             context.Validated(identity);
 

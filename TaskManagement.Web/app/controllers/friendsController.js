@@ -1,6 +1,6 @@
 'use strict';
-app.controller('friendsController', ['$scope', 'friendsService', 'toastr',
-        function ($scope, friendsService, toastr) {
+app.controller('friendsController', ['$scope', '$location', 'friendsService',
+        function ($scope, $location, friendsService) {
 
     $scope.friendsChunks = {};
     $scope.showFriends = false;
@@ -14,7 +14,26 @@ app.controller('friendsController', ['$scope', 'friendsService', 'toastr',
     };
     getFriends();
 
+    // listener for acceptance of friend requests
+    $scope.$on('refreshFriends', function() {
+        getFriends();
+    });
+
     $scope.test = function() {
     	console.log('todo: redirect to user profile');
     }
+
+    $scope.removeFriend = function(friendId) {
+        var data = {
+            friendId: friendId
+        };
+        friendsService.removeFriend(data).then(function success(response) {
+            getFriends();
+        });
+    }
+
+    $scope.redirectToNewFriends = function() {
+        $location.path('/newfriends');
+    }
+
 }]);

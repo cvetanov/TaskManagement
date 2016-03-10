@@ -4,11 +4,14 @@
 		<div class="col-md-3" user-directive ng-repeat="user in nonFriendsChunk"></div>
 	</div>
 </div>
-
+<br />
 <br />
 <div ng-show="showFriendRequests">
 	<h3>Friend requests</h3>
 	<div class="row" ng-repeat="friendRequestChunk in friendRequestsChunks">
 		<div class="col-md-3" friend-request-directive ng-repeat="friendRequest in friendRequestChunk"></div>
 	</div>
+</div>
+<div ng-show="!showFriendRequests">
+	<h3>You have no friend requests yet</h3>
 </div>

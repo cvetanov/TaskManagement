@@ -4,16 +4,19 @@ app.controller('homeController', ['$scope', 'authService', 'friendsService', fun
 
 	$scope.$root.friendRequestsNotification = '';
     var getFriendRequests = function() {
-    	friendsService.getFriendRequests().then(function success(response) {
-    		console.log(response);
-    		if (response.data.length > 0) {
-	    		$scope.$root.friendRequestsNotification = response.data.length;
-    		}
-    		else {
-    			$scope.$root.friendRequestsNotification = '';
-	    	}
-    	})
-    };
+        friendsService.getFriendRequests().then(function success(response) {
+            console.log(response);
+            if (response.data.length > 0) {
+                $scope.$root.friendRequestsNotification = response.data.length;
+            }
+            else {
+                $scope.$root.friendRequestsNotification = '';
+            }
+        });
+    }
+
+    if (authService.authentication.isAuth) {
+        getFriendRequests();
+    }
     
-    getFriendRequests();
 }]);

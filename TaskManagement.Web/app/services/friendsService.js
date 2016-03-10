@@ -1,44 +1,52 @@
 'use strict';
-app.factory('friendsService', ['$http', function ($http) {
+app.factory('friendsService', ['$http', 'baseUrl', function ($http, baseUrl) {
 
-	var serviceBase = 'http://localhost:47860/api/users';
+	var friendsUrl = baseUrl + 'api/friends';
+	var friendRequestsUrl = baseUrl + 'api/friendrequests'
 	var friendsServiceFactory = {};
 
 	var _getFriends = function() {
-		return $http.get(serviceBase + '/GetFriends').then(function (result) {
+		return $http.get(friendsUrl + '/Get').then(function (result) {
 			return result;
 		})
 	}
 
 	var _getUsersNonFriends = function() {
-		return $http.get(serviceBase + '/GetNonFriends').then(function (result) {
+		return $http.get(friendsUrl + '/GetNonFriends').then(function (result) {
 			return result;
 		});
 	};
 
+	var _removeFriend = function(data) {
+		console.log(data);
+		return $http.delete(friendsUrl + '/delete', {params: {friendId : data.friendId}}).then(function (result) {
+			return result;
+		})
+	};
+
 	var _getFriendRequests = function() {
-		return $http.get(serviceBase + '/GetFriendRequests').then(function (result) {
+		return $http.get(friendRequestsUrl + '/Get').then(function (result) {
 			return result;
 		});
 	};
 
 	var _acceptFriendRequest = function(data) {
-		return $http.post(serviceBase + '/AcceptFriendRequest', data).then(function (result) {
+		return $http.put(friendRequestsUrl + '/accept', data).then(function (result) {
 			return result;
 		});
 	};
 
 	var _rejectFriendRequest = function(data) {
-		return $http.post(serviceBase + '/RejectFriendRequest', data).then(function (result) {
+		return $http.put(friendRequestsUrl + '/reject', data).then(function (result) {
 			return result;
 		});
-	}
+	};
 
 	var _sendFriendRequest = function(data) {
-		return $http.post((serviceBase + '/SendFriendRequest'), data).then(function (result) {
+		return $http.post((friendRequestsUrl + '/create'), data).then(function (result) {
 			return result;
 		});
-	}
+	};
 
 	var _chunkify = function(a, n) {
 	    if (n < 2)
@@ -75,6 +83,7 @@ app.factory('friendsService', ['$http', function ($http) {
 	friendsServiceFactory.acceptFriendRequest = _acceptFriendRequest;
 	friendsServiceFactory.rejectFriendRequest = _rejectFriendRequest;
 	friendsServiceFactory.sendFriendRequest = _sendFriendRequest;
+	friendsServiceFactory.removeFriend = _removeFriend;
 	friendsServiceFactory.chunkify = _chunkify;
 
 	return friendsServiceFactory;

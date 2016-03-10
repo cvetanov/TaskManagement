@@ -25,7 +25,7 @@ namespace TaskManagement
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            EnableCrossSiteRequests(config);
+            //EnableCrossSiteRequests(config);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

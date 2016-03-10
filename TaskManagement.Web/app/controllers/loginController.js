@@ -11,9 +11,7 @@ app.controller('loginController', ['$scope', '$location', 'authService', functio
     $scope.login = function () {
 
         authService.login($scope.loginData).then(function (response) {
-
             $location.path('/home');
-
         },
          function (err) {
              $scope.message = err.error_description;

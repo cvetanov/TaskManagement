@@ -1,6 +1,9 @@
 <div class="well">
     <h4 class="text-default">
-        <button class="btn btn-info pull-right" ng-click="test()"><i class="fa fa-user"></i></button> 
+    	<div class="pull-right">
+        	<button class="btn btn-info" ng-click="test()"><i class="fa fa-user"></i></button> 
+        	<button class="btn btn-sm btn-danger" ng-click="removeFriend(friend.Id)"><i class="fa fa-user-times"></i></button> 
+    	</div>
         {{friend.Username}} 
     </h4>
 </div>

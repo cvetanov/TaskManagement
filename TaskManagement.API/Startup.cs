@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(TaskManagement.API.Startup))]
 namespace TaskManagement.API
@@ -20,6 +21,10 @@ namespace TaskManagement.API
             WebApiConfig.Register(config);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             app.UseWebApi(config);
+
+            var hubConfig = new HubConfiguration();
+            hubConfig.EnableJSONP = true;
+            app.MapSignalR(hubConfig);
         }
 
         public void ConfigureOAuth(IAppBuilder app)

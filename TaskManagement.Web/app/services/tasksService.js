@@ -1,7 +1,7 @@
 ﻿'use strict';
-app.factory('tasksService', ['$http', function ($http) {
+app.factory('tasksService', ['$http', 'baseUrl', function ($http, baseUrl) {
 
-    var serviceBase = 'http://localhost:47860/api/tasks';
+    var serviceBase = baseUrl + 'api/tasks';
     var tasksServiceFactory = {};
 
     var _getTask = function(id) {

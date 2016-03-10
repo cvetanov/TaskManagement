@@ -24,6 +24,7 @@ app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
 				$scope.$root.friendRequestsNotification = response.data.length;
 			}
 			else {
+				$scope.showFriendRequests = false;
 				$scope.$root.friendRequestsNotification = '';
 			}
 			$scope.friendRequestsChunks = friendsService.chunkify(response.data, (response.data.length - 1) / 4 + 1);
@@ -32,18 +33,27 @@ app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
 		});
 	}
 
-	var refresh = function() {
+	var refreshData = function() {
 		getUsersNonFriends();
 		getFriendRequests();
 	}
-	refresh();
+	refreshData();
 
-	$scope.sendFriendRequest = function(id) {
+	// listener for acceptance of friend requests
+	$scope.$on('refreshFriends', function() {
+		refreshData();
+	})
+	$scope.$on('refreshFriendRequests', function() {
+		refreshData();
+	})
+
+	$scope.sendFriendRequest = function(id, username) {
 		var data = {
-			Id: id
+			Id: id,
+			Username: username
 		};
 		friendsService.sendFriendRequest(data).then(function success(response) {
-			refresh();
+			refreshData();
 		}, function failure(response) {
 
 		});
@@ -54,8 +64,9 @@ app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
 			Id: id
 		};
 		friendsService.acceptFriendRequest(data).then(function success(response) {
-			toastr.success("You and " + response.data.Username + " are now friends!", "Congratulations");
-			refresh();
+			var username = response.data.Username;
+			toastr.success("You and " + username + " are now friends!", "Congratulations");	
+			refreshData();
 		}, function failure(response) {
 
 		});
@@ -66,8 +77,7 @@ app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
 			Id: id
 		};
 		friendsService.rejectFriendRequest(data).then(function success(response) {
-			toastr.warning("You rejected " + response.data.Username + "'s friend request.");
-			refresh();
+			refreshData();
 		}, function failure(response) {
 
 		})
