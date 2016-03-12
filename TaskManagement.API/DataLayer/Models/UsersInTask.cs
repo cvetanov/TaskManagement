@@ -15,8 +15,8 @@ namespace TaskManagement.API.DataLayer.Models
     public partial class UsersInTask
     {
         public int Id { get; set; }
-        public int TaskId { get; set; }
-        public int UserId { get; set; }
+        public Nullable<int> TaskId { get; set; }
+        public Nullable<int> UserId { get; set; }
         public Nullable<System.DateTime> DateStarted { get; set; }
         public Nullable<bool> Active { get; set; }
         public Nullable<System.DateTime> LastChange { get; set; }

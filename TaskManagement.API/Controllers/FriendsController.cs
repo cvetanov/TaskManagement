@@ -45,13 +45,13 @@ namespace TaskManagement.API.Controllers
                 Id = _userId
             });
 
-            var sentFriendRequests = _uow.FriendRequestsRepository.Get(f => f.FromUserId == _userId && !f.Status).Select(f => new FriendViewModel
+            var sentFriendRequests = _uow.FriendRequestsRepository.Get(f => f.FromUserId == _userId && !f.Resolved.Value).Select(f => new FriendViewModel
             {
                 Id = f.ToUserId.Value,
                 Username = f.ToUser.Username,
                 SentRequest = 1
             }).ToList();
-            var receivedFriendRequests = _uow.FriendRequestsRepository.Get(f => f.ToUserId == _userId && !f.Status).Select(f => new FriendViewModel
+            var receivedFriendRequests = _uow.FriendRequestsRepository.Get(f => f.ToUserId == _userId && !f.Resolved.Value).Select(f => new FriendViewModel
             {
                 Id = f.FromUserId.Value,
                 Username = f.FromUser.Username,
@@ -96,6 +96,16 @@ namespace TaskManagement.API.Controllers
             var usernameTo = friendship1.UserProfile1.Username;
 
             //TODO remove this user from my tasks
+            var myTasks = _uow.TaskRepository.Get(t => t.OwnerId == _userId).ToList();
+            foreach(Task t in myTasks)
+            { 
+                var userInTask = _uow.UsersInTasksRepository.Get(ut => ut.TaskId == t.Id && ut.UserId == friendId).FirstOrDefault();
+                if (userInTask != null)
+                {
+                    _uow.UsersInTasksRepository.Remove(userInTask);
+                }
+            }
+            
 
             friendsRepo.Remove(friendship1);
             friendsRepo.Remove(friendship2);

@@ -38,7 +38,7 @@ namespace TaskManagement.API.Controllers
             {
                 FromUserId = _userId,
                 ToUserId = model.Id,
-                Status = false
+                Resolved = false
             };
             _uow.FriendRequestsRepository.Add(friendRequest);
             _uow.Save();
@@ -54,7 +54,7 @@ namespace TaskManagement.API.Controllers
         public IHttpActionResult GetFriendRequests()
         {
             if (_userId == -1) return Ok(new List<FriendViewModel>());
-            var friendRequests = _uow.FriendRequestsRepository.Get(f => f.ToUserId == _userId && !f.Status).Select(f => new FriendViewModel
+            var friendRequests = _uow.FriendRequestsRepository.Get(f => f.ToUserId == _userId && !f.Resolved.Value).Select(f => new FriendViewModel
             {
                 Id = f.FromUserId.Value,
                 Username = f.FromUser.Username
@@ -66,12 +66,12 @@ namespace TaskManagement.API.Controllers
         [Route("reject")]
         public IHttpActionResult RejectFriendRequest(FriendViewModel model)
         {
-            var friendRequest = _uow.FriendRequestsRepository.Get(r => r.FromUserId == model.Id && r.ToUserId == _userId && !r.Status).FirstOrDefault();
+            var friendRequest = _uow.FriendRequestsRepository.Get(r => r.FromUserId == model.Id && r.ToUserId == _userId && !r.Resolved.Value).FirstOrDefault();
             if (friendRequest == null)
             {
                 return NotFound();
             }
-            friendRequest.Status = true;
+            friendRequest.Resolved = true;
 
             _uow.FriendRequestsRepository.Update(friendRequest);
             _uow.Save();
@@ -85,12 +85,12 @@ namespace TaskManagement.API.Controllers
         [Route("accept")]
         public IHttpActionResult AcceptFriendRequest(FriendViewModel model)
         {
-            var friendRequest = _uow.FriendRequestsRepository.Get(r => r.FromUserId == model.Id && r.ToUserId == _userId && !r.Status).FirstOrDefault();
+            var friendRequest = _uow.FriendRequestsRepository.Get(r => r.FromUserId == model.Id && r.ToUserId == _userId && !r.Resolved.Value).FirstOrDefault();
             if (friendRequest == null)
             {
                 return NotFound();
             }
-            friendRequest.Status = true;
+            friendRequest.Resolved = true;
 
             var friendship1 = new Friendship
             {

@@ -22,7 +22,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FromUserId" Type="int" />
           <Property Name="ToUserId" Type="int" />
-          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="Resolved" Type="bit" />
         </EntityType>
         <EntityType Name="Friendships">
           <Key>
@@ -38,8 +38,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="OwnerId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="OwnerId" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="UserClosedId" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Status" Type="bit" />
@@ -49,15 +49,15 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Username" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="256" />
         </EntityType>
         <EntityType Name="UsersInTasks">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TaskId" Type="int" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="TaskId" Type="int" />
+          <Property Name="UserId" Type="int" />
           <Property Name="DateStarted" Type="datetime" />
           <Property Name="Active" Type="bit" />
           <Property Name="LastChange" Type="datetime" />
@@ -135,7 +135,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Tasks_UserProfile">
-          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="1" />
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
           <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfiles">
@@ -159,7 +159,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UsersInTasks_Tasks">
-          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="0..1" />
           <End Role="UsersInTasks" Type="Self.UsersInTasks" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Tasks">
@@ -171,7 +171,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UsersInTasks_UserProfile">
-          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="1" />
+          <End Role="UserProfiles" Type="Self.UserProfiles" Multiplicity="0..1" />
           <End Role="UsersInTasks" Type="Self.UsersInTasks" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfiles">
@@ -239,8 +239,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OwnerId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OwnerId" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Owner" Relationship="Self.FK_Tasks_UserProfile" FromRole="Tasks" ToRole="UserProfiles" />
           <NavigationProperty Name="UsersInTasks" Relationship="Self.FK_UsersInTasks_Tasks" FromRole="Tasks" ToRole="UsersInTasks" />
@@ -254,7 +254,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="OwnedTasks" Relationship="Self.FK_Tasks_UserProfile" FromRole="UserProfiles" ToRole="Tasks" />
           <NavigationProperty Name="SharedTasks" Relationship="Self.FK_UsersInTasks_UserProfile" FromRole="UserProfiles" ToRole="UsersInTasks" />
           <NavigationProperty Name="SentFriendRequests" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles" FromRole="UserProfile" ToRole="FriendRequest" />
@@ -268,8 +268,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TaskId" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="TaskId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
           <Property Name="DateStarted" Type="DateTime" Precision="3" />
           <Property Name="Active" Type="Boolean" />
           <Property Name="LastChange" Type="DateTime" Precision="3" />
@@ -277,7 +277,7 @@
           <NavigationProperty Name="User" Relationship="Self.FK_UsersInTasks_UserProfile" FromRole="UsersInTasks" ToRole="UserProfiles" />
         </EntityType>
         <Association Name="FK_Tasks_UserProfile">
-          <End Role="UserProfiles" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="UserProfiles" Type="Self.UserProfile" Multiplicity="0..1" />
           <End Role="Tasks" Type="Self.Task" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfiles">
@@ -289,7 +289,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UsersInTasks_Tasks">
-          <End Role="Tasks" Type="Self.Task" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Task" Multiplicity="0..1" />
           <End Role="UsersInTasks" Type="Self.UsersInTask" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Tasks">
@@ -301,7 +301,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UsersInTasks_UserProfile">
-          <End Role="UserProfiles" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="UserProfiles" Type="Self.UserProfile" Multiplicity="0..1" />
           <End Role="UsersInTasks" Type="Self.UsersInTask" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserProfiles">
@@ -367,9 +367,9 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FromUserId" Type="Int32" />
           <Property Name="ToUserId" Type="Int32" />
-          <Property Name="Status" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="FromUser" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles" FromRole="FriendRequest" ToRole="UserProfile" />
           <NavigationProperty Name="ToUser" Relationship="TaskManagementDatabaseModel.FK_FriendRequests_UserProfiles1" FromRole="FriendRequest" ToRole="UserProfile" />
+          <Property Name="Resolved" Type="Boolean" />
         </EntityType>
         <EntityType Name="Friendship">
           <Key>
@@ -519,7 +519,7 @@
           <EntitySetMapping Name="FriendRequests">
             <EntityTypeMapping TypeName="TaskManagementDatabaseModel.FriendRequest">
               <MappingFragment StoreEntitySet="FriendRequests">
-                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Resolved" ColumnName="Resolved" />
                 <ScalarProperty Name="ToUserId" ColumnName="ToUserId" />
                 <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

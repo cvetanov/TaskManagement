@@ -18,23 +18,42 @@ namespace TaskManagement.Controllers
     public class TasksController : ApiController
     {
         private UnitOfWork _uow;
+        private int _userId;
 
         public TasksController(IUnitOfWork uow)
         {
             this._uow = uow as UnitOfWork;
+            var username = User.Identity.Name;
+            _userId = _uow.UserProfilesRepository.Get(u => u.Username == username).First().Id;
         }
         
         [HttpPost]
         public IHttpActionResult Create(TaskViewModel t)
         {
-            var user = _uow.UserProfilesRepository.Get(u => u.Username == t.CreatorUsername).FirstOrDefault();
             Task task = new Task()
             {
                 Name = t.Name,
                 Description = t.Description,
-                OwnerId = user.Id
+                OwnerId = _userId,
+                Status = false
             };
+
             _uow.TaskRepository.Add(task);
+            _uow.Save();
+
+            t.UsersInTask.ForEach(u =>
+            {
+                var userinTask = new UsersInTask
+                {
+                    TaskId = task.Id,
+                    DateStarted = DateTime.Now,
+                    Active = true,
+                    UserId = u.Id,
+                    LastChange = DateTime.Now
+                };
+                _uow.UsersInTasksRepository.Add(userinTask);
+            });
+            
             _uow.Save();
 
             return Ok(task);
@@ -43,41 +62,34 @@ namespace TaskManagement.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            try
-            {
-                var username = (User.Identity as ClaimsIdentity).Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-                var userId = _uow.UserProfilesRepository.Get(u => u.Username == username).First().Id;
-                var tasks = _uow.TaskRepository.Get(t => t.OwnerId == userId).ToList();
-                return Ok(tasks);
-            }
-            catch (Exception e)
-            {
-                return InternalServerError(e);
-            }
+            var tasks = _uow.TaskRepository.Get(t => t.OwnerId == _userId).ToList();
+            
+            //TODO
+            // get tasks im in
+            // split return result in: mytasks & tasks im in
+
+            return Ok(tasks);
         }
 
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
-            var username = (User.Identity as ClaimsIdentity).Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-            var userId = _uow.UserProfilesRepository.Get(u => u.Username == username).First().Id;
             var task = _uow.TaskRepository.Get(id);
-            if (task.OwnerId == userId)
+            if (task.OwnerId == _userId)
             {
                 return Ok(task);
             }
             else
             {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
         }
 
         [HttpPut]
         public IHttpActionResult Update(Task t)
         {
-            var username = (User.Identity as ClaimsIdentity).Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-            var userId = _uow.UserProfilesRepository.Get(u => u.Username == username).First().Id;
-            if (t.OwnerId == userId)
+            // TODO: fix loading errors
+            if (t.OwnerId == _userId)
             {
                 var task = _uow.TaskRepository.Get(t.Id);
                 task.Name = t.Name;
@@ -102,23 +114,32 @@ namespace TaskManagement.Controllers
             }
             else
             {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
         }
 
         [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
-            try
+            var task = _uow.TaskRepository.Get(id);
+            if (task.OwnerId == _userId)
             {
-                var task = _uow.TaskRepository.Get(id);
+                var usersInTask = _uow.UsersInTasksRepository.Get(ut => ut.TaskId == task.Id);
+                foreach (UsersInTask ut in usersInTask)
+                {
+                    ut.TaskId = null;
+                    ut.LastChange = DateTime.Now;
+                    ut.Active = false;
+                    _uow.UsersInTasksRepository.Update(ut);
+                }
                 _uow.TaskRepository.Remove(task);
+                
                 _uow.Save();
                 return Ok();
             }
-            catch(Exception e)
+            else
             {
-                return InternalServerError(e);
+                return Unauthorized();
             }
         }
     }

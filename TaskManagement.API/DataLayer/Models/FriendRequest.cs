@@ -17,7 +17,7 @@ namespace TaskManagement.API.DataLayer.Models
         public int Id { get; set; }
         public Nullable<int> FromUserId { get; set; }
         public Nullable<int> ToUserId { get; set; }
-        public bool Status { get; set; }
+        public Nullable<bool> Resolved { get; set; }
     
         public virtual UserProfile FromUser { get; set; }
         public virtual UserProfile ToUser { get; set; }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TaskManagement.API.DataLayer.Models;
 
 namespace TaskManagement.ViewModels
 {
@@ -9,7 +10,6 @@ namespace TaskManagement.ViewModels
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal PercentageDone { get; set; }
-        public string CreatorUsername { get; set; }
+        public List<UserProfile> UsersInTask { get; set; }
     }
 }
