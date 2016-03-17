@@ -1,7 +1,10 @@
 ﻿'use strict';
 app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'friendsService', '$location', 'toastr',
         function ($scope, tasksService, authService, friendsService, $location, toastr) {
-    $scope.tasks = {};
+    $scope.myTasksChunks = [];
+    $scope.otherTasksChunks = [];
+    $scope.tasksPerRow = 3;
+    $scope.noTasks = true;
 
     var initNewTask = function() {
         $scope.showNewTask = false;
@@ -43,21 +46,21 @@ app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'fri
         $scope.showNewTask = true;
     }
 
-    var resetTableMessage = function() {
-        $scope.showTable = true;
-        $scope.showTableMessage = "";
+    var resetTasks = function() {
+        $scope.noTasks = false;
+        $scope.noTasksMessage = "";
     }
-    resetTableMessage();
 
     var refreshTasks = function() {
         tasksService.getTasks().then(function success(response) {
-            $scope.tasks = response.data;
-            if (response.data.length == 0) {
-                $scope.showTable = false;
-                $scope.showTableMessage = "You have no tasks. Add a new one!";
+            $scope.myTasksChunks = tasksService.chunkify(response.data.myTasks, (response.data.myTasks.length - 1) / $scope.tasksPerRow);
+            $scope.otherTasksChunks = tasksService.chunkify(response.data.otherTasks, (response.data.otherTasks.length - 1) / $scope.tasksPerRow);
+            if (response.data.myTasks.length == 0 && response.data.otherTasks.length == 0) {
+                $scope.noTasks = true;
+                $scope.noTasksMessage = "You have no tasks. Add a new one!";
             }
             else {
-                resetTableMessage();
+                resetTasks();
             }
         }, function failed(response) {
             
@@ -77,6 +80,10 @@ app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'fri
 
     $scope.editTask = function(id) {
         $location.path("/tasks/edit/" + id);
+    };
+
+    $scope.viewTask = function(id) {
+        $location.path("/tasks/" + id);
     };
 
     $scope.deleteTask = function(id) {

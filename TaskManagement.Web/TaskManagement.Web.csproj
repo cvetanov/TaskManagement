@@ -64,17 +64,21 @@
   <ItemGroup>
     <Content Include="app\controllers\friendsController.js" />
     <Content Include="app\controllers\newFriendsController.js" />
+    <Content Include="app\controllers\taskController.js" />
     <Content Include="app\controllers\tasksController.js" />
     <Content Include="app\controllers\tasksEditController.js" />
     <Content Include="app\directives\friend.html" />
     <Content Include="app\directives\friendRequest.html" />
+    <Content Include="app\directives\task.html" />
+    <Content Include="app\services\commentsService.js" />
+    <Content Include="app\views\task.html" />
     <Content Include="app\directives\user.html" />
     <Content Include="app\services\friendsService.js" />
     <Content Include="app\services\tasksService.js" />
     <Content Include="app\views\friends.html" />
     <Content Include="app\views\newFriends.html" />
     <Content Include="app\views\tasks.html" />
-    <Content Include="app\views\tasksEdit.html" />
+    <Content Include="app\views\taskEdit.html" />
     <Content Include="Scripts\angular-toastr.js" />
     <Content Include="Scripts\angular-toastr.min.js" />
     <Content Include="Scripts\angular-toastr.tpls.js" />

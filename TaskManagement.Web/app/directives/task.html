@@ -1,0 +1,25 @@
+﻿<div class="well">
+	<h4>{{task.Name}}</h4>
+	<span class="pull-right badge" ng-show="task.UsersInTasks.length > 0">{{task.UsersInTasks.length}}</span>
+	<div>{{task.Description}}<div>	
+	<br>	
+	<div>
+        <div ng-show="task.Status" class="text-success">
+        	Task finished &nbsp;
+        	<button class="btn btn-sm btn-info" ng-click="viewTask(task.Id)">
+				<i class="fa fa-info-circle"></i>
+			</button>
+		</div>
+		<div ng-hide="task.Status">
+			<button class="btn btn-sm btn-info" ng-click="viewTask(task.Id)">
+				<i class="fa fa-info-circle"></i>
+			</button>
+	        <button class="btn btn-sm btn-primary" ng-click="editTask(task.Id)">
+	        	<i class="fa fa-pencil-square-o"></i>
+	        </button>
+	        <button class="btn btn-sm btn-danger" ng-click="deleteTask(task.Id)">
+	        	<i class="fa fa-times"></i>
+	        </button>
+    	</div>
+    </div>
+</div>

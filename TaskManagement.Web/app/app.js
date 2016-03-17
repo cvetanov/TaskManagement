@@ -22,9 +22,14 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/tasks.html"
     });
 
+    $routeProvider.when("/tasks/:id", {
+        controller: "taskController",
+        templateUrl: "/app/views/task.html"
+    });
+
     $routeProvider.when("/tasks/edit/:id", {
         controller: "tasksEditController",
-        templateUrl: "/app/views/tasksEdit.html",
+        templateUrl: "/app/views/taskEdit.html",
         routeParams: "id"
     });
 
@@ -106,6 +111,12 @@ app.directive('userDirective', function() {
 app.directive('friendRequestDirective', function() {
   return {
     templateUrl: '/app/directives/friendRequest.html'
+  };
+});
+
+app.directive('taskDirective', function() {
+  return {
+    templateUrl: '/app/directives/task.html'
   };
 });
 

@@ -10,6 +10,7 @@ using System.Web.Http;
 using TaskManagement.API.DataLayer.Models;
 using System.Web.Security;
 using System.Security.Claims;
+using TaskManagement.API.ViewModels;
 
 namespace TaskManagement.Controllers
 {
@@ -62,11 +63,14 @@ namespace TaskManagement.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            var tasks = _uow.TaskRepository.Get(t => t.OwnerId == _userId).ToList();
-            
-            //TODO
-            // get tasks im in
-            // split return result in: mytasks & tasks im in
+            var myTasks = _uow.TaskRepository.Get(t => t.OwnerId == _userId).OrderBy(t => t.Status).ToList();
+            var otherTasks = _uow.TaskRepository.Get(t => t.UsersInTasks.Where(u => u.TaskId == t.Id && u.Active.Value && u.UserId.Value == _userId).FirstOrDefault() != null).OrderBy(t => t.Status).ToList();
+
+            var tasks = new
+            {
+                myTasks = myTasks,
+                otherTasks = otherTasks
+            };
 
             return Ok(tasks);
         }
@@ -75,47 +79,44 @@ namespace TaskManagement.Controllers
         public IHttpActionResult Get(int id)
         {
             var task = _uow.TaskRepository.Get(id);
-            if (task.OwnerId == _userId)
-            {
-                return Ok(task);
-            }
-            else
-            {
-                return Unauthorized();
-            }
+            task.Comments = task.Comments.OrderBy(c => c.Id).ToList();
+            return Ok(task);
         }
 
         [HttpPut]
         public IHttpActionResult Update(Task t)
         {
-            // TODO: fix loading errors
-            if (t.OwnerId == _userId)
+            var task = _uow.TaskRepository.Get(t.Id);
+
+            // if task is not closed, but viewmodel has status true (close)
+            if (!task.Status.Value && t.Status.Value)
             {
-                var task = _uow.TaskRepository.Get(t.Id);
-                task.Name = t.Name;
-                task.Description = t.Description;
-                
-                var usersInTasks = t.UsersInTasks.Select(u => new UsersInTask
-                {
-                    Id = u.Id,
-                    TaskId = u.TaskId,
-                    UserId = u.UserId,
-                    Active = u.Active,
-                    DateStarted = u.DateStarted,
-                    LastChange = u.LastChange
-                }).ToList();
-
-                task.UsersInTasks.ToList().ForEach(u => _uow.UsersInTasksRepository.Remove(u));
-                task.UsersInTasks = usersInTasks;
-
+                task.Status = true;
+                task.UserClosedId = _userId;
                 _uow.TaskRepository.Update(task);
                 _uow.Save();
                 return Ok(task);
             }
-            else
+
+            task.Name = t.Name;
+            task.Description = t.Description;
+                
+            var usersInTasks = t.UsersInTasks.Select(u => new UsersInTask
             {
-                return Unauthorized();
-            }
+                Id = u.Id,
+                TaskId = u.TaskId,
+                UserId = u.UserId,
+                Active = u.Active,
+                DateStarted = u.DateStarted,
+                LastChange = u.LastChange
+            }).ToList();
+
+            task.UsersInTasks.ToList().ForEach(u => _uow.UsersInTasksRepository.Remove(u));
+            task.UsersInTasks = usersInTasks;
+
+            _uow.TaskRepository.Update(task);
+            _uow.Save();
+            return Ok(task);
         }
 
         [HttpDelete]

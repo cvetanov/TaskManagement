@@ -1,0 +1,42 @@
+﻿<div class="panel panel-default">
+  <div class="panel-heading">
+  	<div class="row">
+  		<div class="col-md-10">
+  			{{task.Name}} 
+  		</div>
+  		<div class="col-md-2">
+  			<button ng-hide="task.Status" ng-click="finishTask()" class="btn btn-default pull-right">
+  				<i class="fa fa-check-square-o"></i> Done
+  			</button>
+  		</div>
+  	</div>
+  </div>
+  <div class="panel-body">
+  	{{task.Description}}
+
+  	<div class="actionBox">
+        <ul class="commentList">
+            <li ng-repeat="comment in task.Comments">
+                <div class="commentText">
+                    <p class="">
+                		<i ng-show="comment.UserProfile.Username === username" class="fa fa-comment"></i>
+            			<i ng-show="comment.UserProfile.Username !== username" class="fa fa-comment-o"></i>
+                    	{{comment.Text}}
+                    </p> 
+                    <span class="date sub-text">{{comment.UserProfile.Username}} on {{comment.Date.substring(0, 10)}}</span>
+                </div>
+            </li>
+        </ul>
+        <br>
+        <form ng-hide="task.Status" class="form-inline" role="form">
+            <div class="form-group">
+                <input ng-model="newComment" class="form-control" type="text" placeholder="Your comment" />
+            </div>
+            <div class="form-group">
+                <button ng-click="addNewComment()" class="btn btn-default">Add</button>
+            </div>
+        </form>
+        <h4 class="text-success" ng-show="task.Status">Closed by {{task.UserClosed.Username}}</h4>
+    </div>
+  </div>
+</div>

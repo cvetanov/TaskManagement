@@ -214,6 +214,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Auth\AuthContext.cs" />
     <Compile Include="Controllers\ApiControllerWithHub.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\FriendRequestsController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -263,6 +264,8 @@
     <Compile Include="DataLayer\Persistence\Implementations\UnitOfWork.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\ConnectionMapping.cs" />
+    <Compile Include="ViewModels\CommentViewModel.cs" />
+    <Compile Include="ViewModels\IdViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\FriendViewModel.cs" />
   </ItemGroup>

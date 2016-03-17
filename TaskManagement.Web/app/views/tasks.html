@@ -1,29 +1,25 @@
-﻿<h4 ng-show="showTable"><strong>Ongoing tasks</strong></h4>
-<table ng-show="showTable" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <td>Name</td>
-            <td>Description</td>
-            <td>Other users</td>
-            <td></td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="task in tasks">
-            <td>{{task.Name}}</td>
-            <td>{{task.Description}}</td>
-            <td>&nbsp;<span ng-show="task.UsersInTasks.length > 0" class="badge">{{task.UsersInTasks.length}}</span></td>
-            <td>
-                <button class="btn btn-sm btn-primary" ng-click="editTask(task.Id)"><i class="fa fa-pencil-square-o"></i></button>
-                <button class="btn btn-sm btn-danger" ng-click="deleteTask(task.Id)"><i class="fa fa-times"></i></button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<div ng-show="!showTable" class="alert alert-info">
-  {{showTableMessage}}
+﻿<div ng-show="!noTasks">
+    <div ng-show="myTasksChunks[0].length > 0">
+        <h3>My tasks</h3>
+        <div class="row" ng-repeat="myTasksChunk in myTasksChunks">
+            <div class="col-md-4" task-directive ng-repeat="task in myTasksChunk"></div>
+        </div>
+    </div>
+
+    <div ng-show="otherTasksChunks[0].length > 0">
+        <h3>Other tasks</h3>
+        <div class="row" ng-repeat="otherTasksChunk in otherTasksChunks">
+            <div class="col-md-4" task-directive ng-repeat="task in otherTasksChunk"></div>
+        </div>
+    </div>
 </div>
-<br/>
+<div class="alert alert-info" ng-show="noTasks">
+    {{noTasksMessage}}
+</div>
+
+<br>
+<br>
+<br>
 <div class="panel panel-default">
   
 </div>
