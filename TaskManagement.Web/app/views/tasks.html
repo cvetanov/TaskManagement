@@ -1,6 +1,11 @@
 ﻿<div ng-show="!noTasks">
+    <button class="btn btn-success pull-right" ng-click="createTask()">
+        Add <i class="fa fa-plus"></i>
+    </button>
     <div ng-show="myTasksChunks[0].length > 0">
-        <h3>My tasks</h3>
+        <h3>
+            My tasks 
+        </h3>
         <div class="row" ng-repeat="myTasksChunk in myTasksChunks">
             <div class="col-md-4" task-directive ng-repeat="task in myTasksChunk"></div>
         </div>
@@ -15,60 +20,7 @@
 </div>
 <div class="alert alert-info" ng-show="noTasks">
     {{noTasksMessage}}
-</div>
-
-<br>
-<br>
-<br>
-<div class="panel panel-default">
-  
-</div>
-<button ng-show="!showNewTask" class="btn btn-success" ng-click="addNewTask()">Add a new task</button>
-<div class="panel panel-default" ng-show="showNewTask">
-    <div class="panel-body">
-        <h4><strong>Add a new task<strong></h4>
-        <br>
-        <input class="input-sm" ng-model="newTask.Name" type="text" placeholder="Name" />
-        <input class="input-sm" ng-model="newTask.Description" type="text" placeholder="Description" />
-        <button class="btn btn-primary" ng-show="!addFriends" ng-click="addFriendsToTask()">Add users</button>
-        <br>
-        <div ng-show="addFriends" class="row">
-            <div class="col-md-6">
-                <h5>Users in task</h5>
-                <input class="input-sm empty" placeholder="&#xF002;" type="text" ng-model="searchFriendInTask.Username"/>
-                <br>
-                <table class="table">
-                    <tbody>
-                        <tr ng-repeat="friend in newTask.UsersInTask | filter: searchFriendInTask">
-                            <td>
-                                {{friend.Username}} 
-                                <button class="btn btn-sm btn-danger pull-right" ng-click="removeFriendFromTask(friend)">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <h5>Add user in task</h5>
-                <input class="input-sm empty" placeholder="&#xF002;" type="text" ng-model="searchFriend.Username"/>
-                <br>
-                <table class="table">
-                    <tbody>
-                        <tr ng-repeat="friend in friends | filter: searchFriend">
-                            <td>
-                                {{friend.Username}} 
-                                <button class="btn btn-sm btn-success pull-right" ng-click="addFriendInTask(friend)">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <br />
-        <button ng-click="createTask()" class="btn btn-success">Create</button>
-    </div>
+    <button class="btn btn-success pull-right" ng-click="createTask()">
+        Add <i class="fa fa-plus"></i>
+    </button>
 </div>

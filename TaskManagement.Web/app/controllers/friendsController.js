@@ -17,7 +17,7 @@ app.controller('friendsController', ['$scope', '$location', 'friendsService',
     // listener for acceptance of friend requests
     $scope.$on('refreshFriends', function() {
         getFriends();
-    });
+    })
 
     $scope.test = function() {
     	console.log('todo: redirect to user profile');

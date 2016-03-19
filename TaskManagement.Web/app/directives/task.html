@@ -14,12 +14,13 @@
 			<button class="btn btn-sm btn-info" ng-click="viewTask(task.Id)">
 				<i class="fa fa-info-circle"></i>
 			</button>
-	        <button class="btn btn-sm btn-primary" ng-click="editTask(task.Id)">
+	        <button ng-show="task.Owner.Username == username" class="btn btn-sm btn-primary" ng-click="editTask(task.Id)">
 	        	<i class="fa fa-pencil-square-o"></i>
 	        </button>
-	        <button class="btn btn-sm btn-danger" ng-click="deleteTask(task.Id)">
+	        <button class="btn btn-sm btn-danger pull-right" ng-click="deleteTask(task.Id)">
 	        	<i class="fa fa-times"></i>
 	        </button>
     	</div>
     </div>
 </div>
+<a id="task-edit"></a>

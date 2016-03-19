@@ -1,32 +1,60 @@
-<div class="row">
-	<div class="col-md-6 col-md-offset-3">
-		<div class="form-group">
-		  	<label for="task.Name">Name:</label>
-		  	<input type="text" class="form-control" ng-model="task.Name" id="task.Name">
+<div class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+		<div class="panel panel-default">
+		    <div class="panel-body">
+		        <input class="input-sm" ng-model="task.Name" type="text" placeholder="Name" />
+		        <input class="input-sm" ng-model="task.Description" type="text" placeholder="Description" />
+		        <br>
+		        <div class="row">
+		            <div class="col-md-6">
+		                <h5>Users in task</h5>
+		                <input class="input-sm empty" placeholder="&#xF002;" type="text" ng-model="searchFriendInTask.Username"/>
+		                <br>
+		                <table class="table">
+		                    <tbody>
+		                        <tr ng-repeat="friend in friendsInTask | filter: searchFriendInTask">
+		                            <td>
+		                                {{friend.Username}} 
+		                                <button class="btn btn-sm btn-danger pull-right" ng-click="removeFriendFromTask(friend)">
+		                                    <i class="fa fa-minus"></i>
+		                                </button>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		            </div>
+		            <div class="col-md-6">
+		                <h5>Add user in task</h5>
+		                <input class="input-sm empty" placeholder="&#xF002;" type="text" ng-model="searchFriend.Username"/>
+		                <br>
+		                <table class="table">
+		                    <tbody>
+		                        <tr ng-repeat="friend in friendsNotInTask | filter: searchFriend">
+		                            <td>
+		                                {{friend.Username}} 
+		                                <button class="btn btn-sm btn-success pull-right" ng-click="addFriendInTask(friend)">
+		                                    <i class="fa fa-plus"></i>
+		                                </button>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		            </div>
+		        </div>
+		        <br />
+		    </div>
 		</div>
-		<div class="form-group">
-		  	<label for="task.Description">Description:</label>
-		  	<input type="text" class="form-control" ng-model="task.Description" id="task.Description">
-		</div>
-		<div class="form-group">
-		  	<label for="task.Name">Shared with other users:</label>
-	  		<div class="row">
-	  			<div class="col-sm-6 col-sm-offset-1">
-	  				<table class="table">
-	  					<tr ng-repeat="user in task.UsersInTasks">
-	  						<td>{{user.User.Username}}</td>
-	  						<td><button class="btn btn-danger" ng-click="removeUserFromTask(user.UserId)"><i class="fa fa-times"></i></button></td>
-	  					</tr>
-	  					<tr>
-	  						
-	  					</tr>
-	  				</table>
-	  			</div>
-	  		</div>
-		  	<!-- <button ng-click="addUserInTask()" class="btn btn-success"><i class="fa fa-plus"></i></button> -->
-
-		</div>
-
-		<button ng-click="updateTask()" class="btn btn-primary">Save <i class="fa fa-floppy-o"></i></button>
-	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="save()" class="btn btn-primary">OK</button>
+        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -19,7 +19,6 @@ namespace TaskManagement.API.DataLayer.Models
         public Nullable<int> UserId { get; set; }
         public Nullable<System.DateTime> DateStarted { get; set; }
         public Nullable<bool> Active { get; set; }
-        public Nullable<System.DateTime> LastChange { get; set; }
     
         public virtual Task Task { get; set; }
         public virtual UserProfile User { get; set; }

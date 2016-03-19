@@ -6,7 +6,7 @@ app.factory('authService', ['$http', '$rootScope', '$q', 'localStorageService', 
 
     var authServiceFactory = {};
 
-    var friendsHub = signalRconnection.createHubProxy('friendsHub');
+    var notificationHub = signalRconnection.createHubProxy('notificationHub');
 
     var _authentication = {
         isAuth: false,
@@ -41,7 +41,7 @@ app.factory('authService', ['$http', '$rootScope', '$q', 'localStorageService', 
                 .done(function () {
                     console.log('Logged in. SignalR web socket now connected, connection ID = ' + signalRconnection.id);
 
-                    friendsHub.invoke('subscribe', signalRconnection.id, _authentication.userName);
+                    notificationHub.invoke('subscribe', signalRconnection.id, _authentication.userName);
                 })
                 .fail(function () { console.log('Logged in. Could not connect web socket'); });
 
@@ -63,7 +63,7 @@ app.factory('authService', ['$http', '$rootScope', '$q', 'localStorageService', 
         
         signalRconnection.start().done(function() {
 
-            friendsHub.invoke('unsubscribe', _authentication.userName);
+            notificationHub.invoke('unsubscribe', _authentication.userName);
             signalRconnection.stop();
             console.log('SignalR web socket disconnected.');
 

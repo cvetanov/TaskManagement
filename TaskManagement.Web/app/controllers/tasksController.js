@@ -1,50 +1,11 @@
 ﻿'use strict';
-app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'friendsService', '$location', 'toastr',
-        function ($scope, tasksService, authService, friendsService, $location, toastr) {
+app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'friendsService', '$location', 'toastr', 'ModalService',
+        function ($scope, tasksService, authService, friendsService, $location, toastr, ModalService) {
     $scope.myTasksChunks = [];
     $scope.otherTasksChunks = [];
     $scope.tasksPerRow = 3;
     $scope.noTasks = true;
-
-    var initNewTask = function() {
-        $scope.showNewTask = false;
-        $scope.addFriends = false;
-        $scope.newTask = {
-            Name: '',
-            Description: '',
-            UsersInTask: []
-        }
-    }
-    initNewTask();
-
-    $scope.addFriendsToTask = function() {
-        $scope.addFriends = true;
-        friendsService.getFriends().then(function success(response) {
-            $scope.friends = response.data;
-        });
-    }
-
-    $scope.removeFriendFromTask = function(friend) {
-        $scope.friends.push(friend);
-
-        var index = $scope.newTask.UsersInTask.indexOf(friend);
-        if (index > -1) {
-            $scope.newTask.UsersInTask.splice(index, 1);
-        }
-    }
-
-    $scope.addFriendInTask = function(friend) {
-        $scope.newTask.UsersInTask.push(friend);
-
-        var index = $scope.friends.indexOf(friend);
-        if (index > -1) {
-            $scope.friends.splice(index, 1);
-        }
-    }
-
-    $scope.addNewTask = function() {
-        $scope.showNewTask = true;
-    }
+    $scope.username = authService.authentication.userName;
 
     var resetTasks = function() {
         $scope.noTasks = false;
@@ -67,19 +28,42 @@ app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'fri
         });
     }
     refreshTasks();
+    $scope.$on('refreshTasks', function() {
+        refreshTasks();
+    });
 
-    $scope.createTask = function () {
-        tasksService.createTask($scope.newTask).then(function success(response) {
-            toastr.success("Task created.", "Success!");
-            refreshTasks();
-            initNewTask();
-        }, function failed(response) {
-            toastr.error("Something went wrong.", "Error!");
+    $scope.$on('refreshFriends', function() {
+        refreshTasks();
+    })
+
+    $scope.createTask = function() {
+        ModalService.showModal({
+            templateUrl: '/app/views/taskEdit.html',
+            controller: "tasksEditController",
+            inputs: {
+                taskId : 0
+            }
+        }).then(function(modal) {
+            modal.element.modal();
+            modal.close.then(function(result) {
+                refreshTasks();
+            });
         });
-    };
+    }
 
     $scope.editTask = function(id) {
-        $location.path("/tasks/edit/" + id);
+        ModalService.showModal({
+            templateUrl: '/app/views/taskEdit.html',
+            controller: "tasksEditController",
+            inputs: {
+                taskId : id
+            }
+        }).then(function(modal) {
+            modal.element.modal();
+            modal.close.then(function(result) {
+                refreshTasks();
+            });
+        });
     };
 
     $scope.viewTask = function(id) {
@@ -92,6 +76,7 @@ app.controller('tasksController', ['$scope', 'tasksService', 'authService', 'fri
             refreshTasks();
         }, function failure(response) {
             toastr.error("Failed to delete task.", "Error!");
+            $location.path('/tasks');
         })
     };
 

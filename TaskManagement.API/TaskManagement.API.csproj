@@ -217,6 +217,7 @@
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\FriendRequestsController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
+    <Compile Include="Controllers\UserProfilesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DataLayer\Models\Comment.cs">
       <DependentUpon>Entities.tt</DependentUpon>
@@ -255,7 +256,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="DataLayer\Models\UserModel.cs" />
-    <Compile Include="Utilities\FriendsHub.cs" />
+    <Compile Include="Utilities\NotificationHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth\Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="DataLayer\Persistence\Implementations\GenericRepository.cs" />

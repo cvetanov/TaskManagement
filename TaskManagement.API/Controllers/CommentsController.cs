@@ -27,6 +27,11 @@ namespace TaskManagement.API.Controllers
         [HttpPost]
         public IHttpActionResult Create(CommentViewModel comment)
         {
+            var task = _uow.TaskRepository.Get(comment.TaskId);
+            if (task.Status.Value) // task is closed, no comments allowed
+            {
+                return NotFound();
+            }
             var c = new Comment()
             {
                 TaskId = comment.TaskId,
@@ -36,6 +41,11 @@ namespace TaskManagement.API.Controllers
             };
             _uow.CommentsRepository.Add(c);
             _uow.Save();
+            
+            var usernames = task.UsersInTasks.Select(u => u.User.Username).ToList();
+            usernames.Add(task.Owner.Username);
+
+            NotificationHub.NotifyRefreshTask(usernames, comment.TaskId);
             return Ok(c);
         }
     }

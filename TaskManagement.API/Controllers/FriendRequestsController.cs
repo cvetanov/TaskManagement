@@ -12,7 +12,7 @@ namespace TaskManagement.API.Controllers
 {
     [Authorize]
     [RoutePrefix("api/friendrequests")]
-    public class FriendRequestsController : ApiControllerWithHub<FriendsHub>
+    public class FriendRequestsController : ApiControllerWithHub<NotificationHub>
     {
         private UnitOfWork _uow;
         private int _userId;
@@ -44,7 +44,7 @@ namespace TaskManagement.API.Controllers
             _uow.Save();
 
             // send notification to user (if online)
-            FriendsHub.NotifyNewFriendRequest(model.Username);
+            NotificationHub.NotifyNewFriendRequest(model.Username);
 
             return Ok();
         }
@@ -76,7 +76,7 @@ namespace TaskManagement.API.Controllers
             _uow.FriendRequestsRepository.Update(friendRequest);
             _uow.Save();
 
-            FriendsHub.NotifyFriendRequestRejected(friendRequest.FromUser.Username);
+            NotificationHub.NotifyFriendRequestRejected(friendRequest.FromUser.Username);
             model.Username = friendRequest.FromUser.Username;
             return Ok(model);
         }
@@ -110,7 +110,7 @@ namespace TaskManagement.API.Controllers
             _uow.FriendsRepository.Add(friendship2);
             _uow.Save();
 
-            FriendsHub.NotifyAccept(friendRequest.FromUser.Username, friendRequest.ToUser.Username);
+            NotificationHub.NotifyAccept(friendRequest.FromUser.Username, friendRequest.ToUser.Username);
             model.Username = friendRequest.FromUser.Username;
             return Ok(model);
         }

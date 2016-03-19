@@ -9,6 +9,8 @@ app.controller('taskController', ['$scope', '$routeParams', 'tasksService', 'com
                 commentsService.addComment($scope.newComment, $routeParams.id).then(function () {
                     $scope.newComment = '';
                     refreshTask();
+                }, function() {
+                    toastr.error('Something went wrong');
                 });
             }
 
@@ -23,9 +25,21 @@ app.controller('taskController', ['$scope', '$routeParams', 'tasksService', 'com
                     console.log(response);
                     $scope.task = response.data;
                 }, function failed(response) {
-
+                    toastr.error('Task not found');
+                    $location.path("/tasks");
                 });
             }
+
+            $scope.$on('refreshTask', function(event, message) {
+                if (message.data.taskId == $routeParams.id) {
+                    refreshTask();
+                }
+            });
+
+            $scope.$on('refreshFriends', function() {
+                refreshTask();
+            })
+
             refreshTask();
 
         }]);

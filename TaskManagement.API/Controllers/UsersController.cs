@@ -14,7 +14,7 @@ namespace TaskManagement.API.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Users")]
-    public class UsersController : ApiControllerWithHub<FriendsHub>
+    public class UsersController : ApiControllerWithHub<NotificationHub>
     {
 
         private UnitOfWork _uow;

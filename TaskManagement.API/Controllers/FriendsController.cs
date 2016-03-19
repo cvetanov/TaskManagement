@@ -12,7 +12,7 @@ namespace TaskManagement.API.Controllers
 {
     [Authorize]
     [RoutePrefix("api/friends")]
-    public class FriendsController : ApiControllerWithHub<FriendsHub>
+    public class FriendsController : ApiControllerWithHub<NotificationHub>
     {
         private UnitOfWork _uow;
         private int _userId;
@@ -86,6 +86,48 @@ namespace TaskManagement.API.Controllers
             return Ok(friends);
         }
 
+        [HttpGet]
+        [Route("getFriendsNotInTask/{taskId}")]
+        public IHttpActionResult GetFriendsNotInTask(int taskId)
+        {
+            if (taskId == 0)
+            {
+                return Ok(_uow.FriendsRepository.Get(f => f.User1.Value == _userId).Select(f => new FriendViewModel
+                {
+                    Id = f.User2.Value,
+                    Username = f.UserProfile1.Username
+                }).ToList());
+            }
+
+            var task = _uow.TaskRepository.Get(taskId);
+            var usersInTask = task.UsersInTasks.Select(u => u.UserId).ToList();
+            var friends = _uow.FriendsRepository.Get(f => f.User1.Value == _userId && !usersInTask.Contains(f.User2.Value)).
+                Select(f => new FriendViewModel
+                {
+                    Id = f.User2.Value,
+                    Username = f.UserProfile1.Username
+                }).ToList();
+            return Ok(friends);
+        }
+
+        [HttpGet]
+        [Route("getFriendsInTask/{taskId}")]
+        public IHttpActionResult GetFriendsInTask(int taskId)
+        {
+            if (taskId == 0)
+            {
+                return Ok(new List<FriendViewModel>());
+            }
+
+            var task = _uow.TaskRepository.Get(taskId);
+            var friendsInTask = task.UsersInTasks.Select(u => new FriendViewModel
+            {
+                Id = u.UserId.Value,
+                Username = u.User.Username
+            }).ToList();
+            return Ok(friendsInTask);
+        }
+
         [HttpDelete]
         [Route("delete")]
         public IHttpActionResult DeleteFriend(int friendId)
@@ -94,10 +136,9 @@ namespace TaskManagement.API.Controllers
             var friendship1 = friendsRepo.Get(f => f.User1.Value == _userId && f.User2.Value == friendId).FirstOrDefault();
             var friendship2 = friendsRepo.Get(f => f.User2.Value == _userId && f.User1.Value == friendId).FirstOrDefault();
             var usernameTo = friendship1.UserProfile1.Username;
-
-            //TODO remove this user from my tasks
+            
             var myTasks = _uow.TaskRepository.Get(t => t.OwnerId == _userId).ToList();
-            foreach(Task t in myTasks)
+            foreach(var t in myTasks)
             { 
                 var userInTask = _uow.UsersInTasksRepository.Get(ut => ut.TaskId == t.Id && ut.UserId == friendId).FirstOrDefault();
                 if (userInTask != null)
@@ -111,7 +152,7 @@ namespace TaskManagement.API.Controllers
             friendsRepo.Remove(friendship2);
             _uow.Save();
 
-            FriendsHub.NotifyFriendshipDeleted(usernameTo);
+            NotificationHub.NotifyFriendshipDeleted(usernameTo);
             return Ok();
         }
     }

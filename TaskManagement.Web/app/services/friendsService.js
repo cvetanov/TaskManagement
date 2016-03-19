@@ -9,6 +9,18 @@ app.factory('friendsService', ['$http', 'baseUrl', function ($http, baseUrl) {
 		return $http.get(friendsUrl + '/Get').then(function (result) {
 			return result;
 		})
+	};
+
+	var _getFriendsNotInTask = function(taskId) {
+		return $http.get(friendsUrl + '/getFriendsNotInTask/' + taskId).then(function (result) {
+			return result;
+		});
+	};
+
+	var _getFriendsInTask = function(taskId) {
+		return $http.get(friendsUrl + '/getFriendsInTask/' + taskId).then(function (result) {
+			return result;
+		});
 	}
 
 	var _getUsersNonFriends = function() {
@@ -18,7 +30,6 @@ app.factory('friendsService', ['$http', 'baseUrl', function ($http, baseUrl) {
 	};
 
 	var _removeFriend = function(data) {
-		console.log(data);
 		return $http.delete(friendsUrl + '/delete', {params: {friendId : data.friendId}}).then(function (result) {
 			return result;
 		})
@@ -78,6 +89,8 @@ app.factory('friendsService', ['$http', 'baseUrl', function ($http, baseUrl) {
 	}
 
 	friendsServiceFactory.getFriends = _getFriends;
+	friendsServiceFactory.getFriendsInTask = _getFriendsInTask;
+	friendsServiceFactory.getFriendsNotInTask = _getFriendsNotInTask;
 	friendsServiceFactory.getUsersNonFriends = _getUsersNonFriends;
 	friendsServiceFactory.getFriendRequests = _getFriendRequests;
 	friendsServiceFactory.acceptFriendRequest = _acceptFriendRequest;

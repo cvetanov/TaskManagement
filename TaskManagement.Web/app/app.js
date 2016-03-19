@@ -1,4 +1,4 @@
-﻿var app = angular.module('TaskManagementApp', ['ngRoute', 'LocalStorageModule', 'angular-loading-bar', 'toastr']);
+﻿var app = angular.module('TaskManagementApp', ['ngRoute', 'angularModalService', 'LocalStorageModule', 'angular-loading-bar', 'toastr']);
 
 app.config(function ($routeProvider) {
 
@@ -61,12 +61,12 @@ app.value('signalRconnection', $.hubConnection('http://localhost:47860/'));
 app.run(['$rootScope', 'toastr', 'authService', 'signalRconnection', 'friendsService', 
     function($rootScope, toastr, authService, signalRconnection, friendsService) {
 
-    var friendsHub = signalRconnection.createHubProxy('friendsHub');
-    friendsHub.on('notifyAccept', function(message) {
+    var notificationHub = signalRconnection.createHubProxy('notificationHub');
+    notificationHub.on('notifyAccept', function(message) {
         toastr.info(message, "You have a new friend!");
         $rootScope.$broadcast('refreshFriends');
     });
-    friendsHub.on('notifyNewFriendRequest', function(message) {
+    notificationHub.on('notifyNewFriendRequest', function(message) {
         toastr.info("You have a new friend request");
         friendsService.getFriendRequests().then(function success(response) {
             if (response.data.length > 0) {
@@ -78,11 +78,19 @@ app.run(['$rootScope', 'toastr', 'authService', 'signalRconnection', 'friendsSer
             }
         });
     });
-    friendsHub.on('notifyFriendRequestRejected', function(message) {
+    notificationHub.on('notifyFriendRequestRejected', function(message) {
         $rootScope.$broadcast('refreshFriends');
     });
-    friendsHub.on('notifyFriendshipDeleted', function(message) {
+    notificationHub.on('notifyFriendshipDeleted', function(message) {
         $rootScope.$broadcast('refreshFriends');
+    });
+    notificationHub.on('notifyRefreshTask', function(taskId) {
+        var message = {data: { taskId: taskId}};
+        $rootScope.$broadcast('refreshTask', message);
+    });
+    notificationHub.on('notifyRefreshTasks', function(taskId) {
+        var message = {data: { taskId: taskId}};
+        $rootScope.$broadcast('refreshTasks', message);
     });
     
 
@@ -90,7 +98,7 @@ app.run(['$rootScope', 'toastr', 'authService', 'signalRconnection', 'friendsSer
         signalRconnection.start()
             .done(function(){ 
                 console.log('SignalR web socket now connected, connection ID = ' + signalRconnection.id); 
-                friendsHub.invoke('subscribe', signalRconnection.id, authService.authentication.userName);
+                notificationHub.invoke('subscribe', signalRconnection.id, authService.authentication.userName);
             })
             .fail(function(){ console.log('Could not connect'); });
     }
@@ -118,6 +126,16 @@ app.directive('taskDirective', function() {
   return {
     templateUrl: '/app/directives/task.html'
   };
+});
+
+app.directive('taskEditDirective', function () {
+    return {
+      templateUrl: '/app/directives/taskEdit.html',
+      restrict: 'E',
+      transclude: true,
+      replace:true,
+      scope:true,
+    };
 });
 
 app.config(function(toastrConfig) {

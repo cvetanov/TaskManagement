@@ -18,9 +18,11 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 60px;
-    background-color: #f5f5f5;
+    background-color: #222;
+}
+
+.navbar-custom {
+    background-color: #2c3e50;
 }
 
 .text-muted {
@@ -112,7 +114,6 @@ input.empty {
 .commentList {
     padding:0;
     list-style:none;
-    max-height:200px;
     overflow:auto;
 }
 .commentList li {
@@ -133,4 +134,31 @@ input.empty {
 .actionBox {
     border-top:1px dotted #bbb;
     padding:10px;
+}
+
+.btn-outline {
+    margin-top: 15px;
+    border: 1px solid #fff;
+    font-size: 20px;
+    color: #000;
+    background: #18bc9c;
+    transition: all .3s ease-in-out;
+}
+.btn-outline:hover,
+.btn-outline:focus,
+.btn-outline:active,
+.btn-outline.active {
+    border: solid 2px #000;
+    color: #18bc9c;
+    background: #000;
+}
+.btn-social {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #fff;
+    border-radius: 100%;
+    text-align: center;
+    font-size: 20px;
+    line-height: 45px;
 }

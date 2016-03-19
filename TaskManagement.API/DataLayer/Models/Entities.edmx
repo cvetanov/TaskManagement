@@ -60,7 +60,6 @@
           <Property Name="UserId" Type="int" />
           <Property Name="DateStarted" Type="datetime" />
           <Property Name="Active" Type="bit" />
-          <Property Name="LastChange" Type="datetime" />
         </EntityType>
         <Association Name="FK_Comments_Tasks">
           <End Role="Tasks" Type="Self.Tasks" Multiplicity="0..1" />
@@ -272,7 +271,6 @@
           <Property Name="UserId" Type="Int32" />
           <Property Name="DateStarted" Type="DateTime" Precision="3" />
           <Property Name="Active" Type="Boolean" />
-          <Property Name="LastChange" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Task" Relationship="Self.FK_UsersInTasks_Tasks" FromRole="UsersInTasks" ToRole="Tasks" />
           <NavigationProperty Name="User" Relationship="Self.FK_UsersInTasks_UserProfile" FromRole="UsersInTasks" ToRole="UserProfiles" />
         </EntityType>
@@ -512,7 +510,6 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="DateStarted" ColumnName="DateStarted" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="LastChange" ColumnName="LastChange" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
