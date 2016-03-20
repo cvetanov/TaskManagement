@@ -1,0 +1,50 @@
+﻿<div class="container">
+  <div class="row">
+  	<div class="col-md-6 col-md-offset-3">
+    
+      <div class="panel panel-default">
+			<div class="panel-body">
+              		<div class="row">
+                        <div class="padding-left-medium">
+                            <h2>{{user.Username}}</h2>
+                            <p><strong>Created tasks: </strong> {{user.CreatedTasks}} </p>
+                            <p><strong>Other tasks: </strong> {{user.OtherTasks}} </p>
+                            <p><strong>Interaction: </strong> {{user.Comments}} comments total. </p>
+                        </div><!--/col-->          
+                        <div class="padding-left-medium" ng-show="user.IsFriend">
+                          <h5>Your friend since {{user.FriendSince.substring(0, 10)}}</h5>
+                        </div>
+                        <div ng-show="!user.IsFriend">
+                          <div ng-show="user.FriendRequestSent">
+                            <div class="col-md-12">
+                              <span class="label label-default span-block">
+                                  <i class="fa fa-user-plus"></i>Friend request sent
+                              </span>
+                            </div>
+                          </div>
+                          <div ng-show="user.FriendRequestReceived">
+                            <div class="col-md-6">
+                              <button class="btn btn-success btn-block" ng-click="acceptFriendRequest()">
+                                <i class="fa fa-user-plus"></i>Accept
+                              </button>
+                            </div>
+                            <div class="col-md-6">
+                              <button class="btn btn-danger btn-block" ng-click="rejectFriendRequest()">
+                                <i class="fa fa-user-plus"></i>Reject
+                              </button>
+                            </div>
+                          </div>
+                          <div ng-show="!user.FriendRequestSent && !user.FriendRequestReceived">
+                            <div class="col-md-12">
+                              <button class="btn btn-primary btn-block" ng-click="addFriend()">
+                                <i class="fa fa-user-plus"></i>Add friend
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+              		</div><!--/row-->
+              </div><!--/panel-body-->
+          </div><!--/panel-->
+    </div>
+  </div>
+</div>

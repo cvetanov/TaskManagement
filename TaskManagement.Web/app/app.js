@@ -43,6 +43,12 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/newFriends.html",
     });
 
+    $routeProvider.when("/users/:id", {
+        controller: "usersController",
+        templateUrl: "/app/views/user.html",
+        routeParams: 'id'
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
 });
 

@@ -1,11 +1,14 @@
 <div class="well">
     <h4 class="text-default">
-        <button ng-show="user.SentRequest == 0" class="btn btn-primary pull-right" ng-click="sendFriendRequest(user.Id, user.Username)">
-        	<i class="fa fa-user-plus"></i>
-        </button> 
-        <span ng-show="user.SentRequest == 1" class="label label-default pull-right">
-        	<i class="fa fa-user-plus"></i>
-        </span> 
+    	<div class="pull-right">
+	    	<button class="btn btn-info" ng-click="showUser(user.Id)"><i class="fa fa-user"></i></button> 
+	        <button ng-show="user.SentRequest == 0" class="btn btn-primary" ng-click="sendFriendRequest(user.Id, user.Username)">
+	        	<i class="fa fa-user-plus"></i>
+	        </button> 
+	        <span ng-show="user.SentRequest == 1" class="label label-default">
+	        	<i class="fa fa-user-plus"></i>
+	        </span> 
+	    </div>
         {{user.Username}}
     </h4>
 </div>

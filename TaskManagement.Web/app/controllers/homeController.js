@@ -2,6 +2,8 @@
 app.controller('homeController', ['$scope', 'authService', 'friendsService', function ($scope, authService, friendsService) {
 	$scope.loggedIn = authService.authentication;
 
+    $scope.message = "Random text";
+
 	$scope.$root.friendRequestsNotification = '';
     var getFriendRequests = function() {
         friendsService.getFriendRequests().then(function success(response) {

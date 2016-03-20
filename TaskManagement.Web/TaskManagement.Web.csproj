@@ -67,10 +67,12 @@
     <Content Include="app\controllers\taskController.js" />
     <Content Include="app\controllers\tasksController.js" />
     <Content Include="app\controllers\tasksEditController.js" />
+    <Content Include="app\controllers\usersController.js" />
     <Content Include="app\directives\friend.html" />
     <Content Include="app\directives\friendRequest.html" />
     <Content Include="app\directives\task.html" />
     <Content Include="app\services\commentsService.js" />
+    <Content Include="app\services\usersService.js" />
     <Content Include="app\views\task.html" />
     <Content Include="app\directives\user.html" />
     <Content Include="app\services\friendsService.js" />
@@ -79,6 +81,7 @@
     <Content Include="app\views\newFriends.html" />
     <Content Include="app\views\tasks.html" />
     <Content Include="app\views\taskEdit.html" />
+    <Content Include="app\views\user.html" />
     <Content Include="Scripts\angular-modal-service.js" />
     <Content Include="Scripts\angular-toastr.js" />
     <Content Include="Scripts\angular-toastr.min.js" />

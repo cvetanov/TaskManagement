@@ -19,8 +19,8 @@ app.controller('friendsController', ['$scope', '$location', 'friendsService',
         getFriends();
     })
 
-    $scope.test = function() {
-    	console.log('todo: redirect to user profile');
+    $scope.showUser = function(id) {
+    	$location.path('/users/' + id);
     }
 
     $scope.removeFriend = function(friendId) {

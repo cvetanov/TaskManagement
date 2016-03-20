@@ -1,6 +1,6 @@
 'use strict';
-app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
-        function ($scope, friendsService, toastr) {
+app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr', '$location',
+        function ($scope, friendsService, toastr, $location) {
 
     $scope.nonFriendsChunks = {};
     $scope.showNonFriends = false;
@@ -83,5 +83,7 @@ app.controller('newFriendsController', ['$scope', 'friendsService', 'toastr',
 		})
 	}
 
-
+	$scope.showUser = function(id) {
+    	$location.path('/users/' + id);
+    }
 }]);
