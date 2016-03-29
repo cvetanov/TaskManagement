@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using TaskManagement.API.ViewModels;
 using TaskManagement.Persistence;
 
 namespace TaskManagement.API.Controllers
 {
-    [RoutePrefix("api/userProfile")]
     [Authorize]
+    [RoutePrefix("api/userProfile")]
     public class UserProfilesController : ApiController
     {
         private UnitOfWork _uow;
@@ -25,6 +33,9 @@ namespace TaskManagement.API.Controllers
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
+            if (id == 0)
+                id = _userId;
+
             var user = _uow.UserProfilesRepository.Get(id);
             var friendship = _uow.FriendsRepository.Get(f => f.User1.Value == _userId && f.User2.Value == id).FirstOrDefault();
             var isFriend = friendship != null;
@@ -42,11 +53,20 @@ namespace TaskManagement.API.Controllers
                 Comments = _uow.CommentsRepository.Get(c => c.UserId == user.Id).Count(),
                 IsFriend = isFriend,
                 FriendRequestSent = friendRequestSent != null,
-                FriendRequestReceived = friendRequestReceived != null
+                FriendRequestReceived = friendRequestReceived != null,
+                Image = user.ProfilePhotoUrl
             };
             if (isFriend)
             {
                 viewModel.FriendSince = friendship.DateStart.Value;
+            }
+            if (_userId == id)
+            {
+                viewModel.Me = true;
+            }
+            else
+            {
+                viewModel.Me = false;
             }
             return Ok(viewModel);
         }

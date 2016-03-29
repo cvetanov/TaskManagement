@@ -29,6 +29,7 @@
                             <span class="label label-round label-danger">{{friendRequestsNotification}}</span>
                         </a>
                     </li>
+                    <li data-ng-hide="!authentication.isAuth"><a href="#/users/0">Me</a></li>
                     <li data-ng-hide="!authentication.isAuth"><a href="" data-ng-click="logOut()">Logout</a></li>
                     <li data-ng-hide="authentication.isAuth"> <a href="#/login">Login</a></li>
                     <li data-ng-hide="authentication.isAuth"> <a href="#/signup">Sign Up</a></li>

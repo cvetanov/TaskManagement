@@ -2,9 +2,14 @@
 app.controller('usersController', ['$scope', '$routeParams', 'usersService', 'friendsService', '$location', 'toastr',
         function ($scope, $routeParams, usersService, friendsService, $location, toastr) {
             $scope.user = {};
+            $scope.upload = false;
+
             var getUserData = function() {
                 usersService.getUser($routeParams.id).then(function (response) {
                     $scope.user = response.data;
+                    usersService.getPhoto(response.data.Image).then(function (response) {
+                        $scope.image = response.data;
+                    });
                 });
                 friendsService.getFriendRequests().then(function success(response) {
                     if (response.data.length > 0) {
@@ -22,6 +27,14 @@ app.controller('usersController', ['$scope', '$routeParams', 'usersService', 'fr
             $scope.$on('refreshFriendRequests', function() {
                 getUserData();
             })
+
+            $scope.hoverInPhoto = function() {
+                $scope.upload = true;
+            }
+
+            $scope.hoverOutPhoto = function() {
+                $scope.upload = false;
+            }
 
             $scope.addFriend = function() {
                 var data = {
@@ -58,6 +71,19 @@ app.controller('usersController', ['$scope', '$routeParams', 'usersService', 'fr
 
                 })
             }
+
+            $scope.uploadFile = function(files) {
+                var fd = new FormData();
+                //Take the first selected file
+                fd.append("file", files[0]);
+
+                usersService.uploadPhoto(fd).then(function(response) {
+                    getUserData();
+                }, function (response) {
+                    console.log('error uploading photo');
+                });
+
+            };
 
             getUserData();
 

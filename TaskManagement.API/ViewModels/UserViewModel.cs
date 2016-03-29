@@ -19,5 +19,7 @@ namespace TaskManagement.API.ViewModels
         public DateTime FriendSince { get; set; }
         public bool FriendRequestSent { get; set; }
         public bool FriendRequestReceived { get; set; }
+        public bool Me { get; set; }
+        public string Image { get; set; }
     }
 }

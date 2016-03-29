@@ -28,6 +28,7 @@ namespace TaskManagement.API.DataLayer.Models
     
         public int Id { get; set; }
         public string Username { get; set; }
+        public string ProfilePhotoUrl { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Task> OwnedTasks { get; set; }

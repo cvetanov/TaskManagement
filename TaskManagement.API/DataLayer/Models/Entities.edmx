@@ -50,6 +50,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="256" />
+          <Property Name="ProfilePhotoUrl" Type="nvarchar" MaxLength="256" />
         </EntityType>
         <EntityType Name="UsersInTasks">
           <Key>
@@ -261,6 +262,7 @@
           <NavigationProperty Name="Friendships" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles" FromRole="UserProfile" ToRole="Friendship" />
           <NavigationProperty Name="Friendships1" Relationship="TaskManagementDatabaseModel.FK_Friendships_UserProfiles1" FromRole="UserProfile" ToRole="Friendship" />
           <NavigationProperty Name="Comments" Relationship="TaskManagementDatabaseModel.FK_Comments_UserProfiles" FromRole="UserProfile" ToRole="Comment" />
+          <Property Name="ProfilePhotoUrl" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UsersInTask">
           <Key>
@@ -497,6 +499,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="TaskManagementDatabaseModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfiles">
+                <ScalarProperty Name="ProfilePhotoUrl" ColumnName="ProfilePhotoUrl" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
               </MappingFragment>
