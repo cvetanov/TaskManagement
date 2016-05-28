@@ -83,6 +83,10 @@
     <Content Include="app\views\tasks.html" />
     <Content Include="app\views\taskEdit.html" />
     <Content Include="app\views\user.html" />
+    <Content Include="Content\img\Clear.png" />
+    <Content Include="Content\img\Clouds.png" />
+    <Content Include="Content\img\Rain.png" />
+    <Content Include="Content\img\Snow.png" />
     <Content Include="Scripts\angular-modal-service.js" />
     <Content Include="Scripts\angular-toastr.js" />
     <Content Include="Scripts\angular-toastr.min.js" />

@@ -5,6 +5,7 @@ app.controller('tasksEditController', ['$rootScope', '$scope', '$location', 'tas
 	$scope.title = 'New task';
     $scope.showWeather = true;
     $scope.weather = '- loading';
+    $scope.weatherInfo = 'Clear';
 
 	if (taskId != 0) {
 		$scope.title = 'Edit task';
@@ -49,7 +50,8 @@ app.controller('tasksEditController', ['$rootScope', '$scope', '$location', 'tas
         weatherService.getCity(function(city, country) {
             weatherService.getWeather(city, country).then(function (weatherResponse) {
                 console.log(weatherResponse);
-                $scope.weather = weatherResponse.data;
+                $scope.weather = weatherResponse.data.temp;
+                $scope.weatherInfo = weatherResponse.data.info + '.png';
             });
         }, response.coords.latitude, response.coords.longitude);
     }

@@ -6,7 +6,9 @@
         <h4 class="modal-title">{{title}}</h4>
       </div>
       <div class="modal-body">
-        <h5 ng-show="showWeather">Current weather conditions {{weather}}</h5>
+        <h5 ng-show="showWeather">Current weather conditions {{weather}} 
+        	<img class='weather-picture-task' ng-src='/Content/img/{{weatherInfo}}' />
+        </h5>
 		<div class="panel panel-default">
 		    <div class="panel-body">
 		        <input class="input-sm" ng-model="task.Name" type="text" placeholder="Name" />

@@ -35,8 +35,11 @@ namespace TaskManagement.API.Controllers
 
             var temp = content["main"]["temp"];
             var weather = content["weather"][0]["main"];
-            var result = (Convert.ToDouble(temp.ToString()) - 273.15) + "°C - " + weather;
-
+            var result = new
+            {
+                temp = (Convert.ToDouble(temp.ToString()) - 273.15) + "°C",
+                info = weather.ToString()
+            };
             return Ok(result);
         }
 
@@ -68,7 +71,7 @@ namespace TaskManagement.API.Controllers
 
             var data = new
             {
-                labels = values.Select(v => v.date.ToString().Substring(5, v.date.ToString().IndexOf(":")) + "h - " + v.weatherInfo.ToString()).Take(12).ToList(),
+                labels = values.Select(v => v.date.ToString().Substring(5, v.date.ToString().IndexOf(":") - 5) + "h - " + v.weatherInfo.ToString()).Take(12).ToList(),
                 datasets = new[] {
                     new
                     {

@@ -4,6 +4,7 @@ app.controller('homeController', ['$scope', 'authService', 'friendsService', 'we
 	$scope.loggedIn = authService.authentication;
 
     $scope.message = "Weather info";
+    $scope.weatherImg = 'Clear' + '.png';
 
 	$scope.$root.friendRequestsNotification = '';
     var getFriendRequests = function() {
@@ -31,6 +32,7 @@ app.controller('homeController', ['$scope', 'authService', 'friendsService', 'we
         weatherService.getCity(function(city, country) {
             weatherService.getWeatherForecast(city, country).then(function (weatherResponse) {
                 $scope.message = 'Weather mostly ' + weatherResponse.data.info;
+                $scope.weatherImg = weatherResponse.data.info + '.png';
                 var ctx = document.getElementById("line").getContext("2d");
                 var myChart = new Chart(ctx, {
                     type: 'line',

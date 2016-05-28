@@ -219,3 +219,13 @@ input.empty {
     cursor: inherit;
     display: block;
 }
+
+.weather-picture {
+    max-width: 100px !important;
+    max-height: 100px !important;
+}
+
+.weather-picture-task {
+    max-width: 50px !important;
+    max-height: 50px !important;   
+}
