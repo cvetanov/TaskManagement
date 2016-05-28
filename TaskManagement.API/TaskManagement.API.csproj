@@ -220,6 +220,7 @@
     <Compile Include="Controllers\ImagesController.cs" />
     <Compile Include="Controllers\UserProfilesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\WeatherController.cs" />
     <Compile Include="DataLayer\Models\Comment.cs">
       <DependentUpon>Entities.tt</DependentUpon>
     </Compile>

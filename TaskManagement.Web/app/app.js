@@ -61,6 +61,7 @@ app.config(function ($httpProvider) {
 });
 
 app.value('baseUrl', 'http://localhost:47860/');
+app.value('googleApiKey', 'AIzaSyAQ89OXvvQNHMoKifDwclkXCVy9b4iqizw');
 app.value('signalRconnection', $.hubConnection('http://localhost:47860/'));
 
 // if user is already authenticated, connect him to server via web socket using signalR

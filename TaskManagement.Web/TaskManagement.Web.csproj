@@ -73,6 +73,7 @@
     <Content Include="app\directives\task.html" />
     <Content Include="app\services\commentsService.js" />
     <Content Include="app\services\usersService.js" />
+    <Content Include="app\services\weatherService.js" />
     <Content Include="app\views\task.html" />
     <Content Include="app\directives\user.html" />
     <Content Include="app\services\friendsService.js" />

@@ -1,8 +1,9 @@
 ﻿'use strict';
-app.controller('homeController', ['$scope', 'authService', 'friendsService', function ($scope, authService, friendsService) {
+app.controller('homeController', ['$scope', 'authService', 'friendsService', 'weatherService',
+     function ($scope, authService, friendsService, weatherService) {
 	$scope.loggedIn = authService.authentication;
 
-    $scope.message = "Random text";
+    $scope.message = "Weather info";
 
 	$scope.$root.friendRequestsNotification = '';
     var getFriendRequests = function() {
@@ -17,8 +18,32 @@ app.controller('homeController', ['$scope', 'authService', 'friendsService', fun
         });
     }
 
+    var getWeatherInfo = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(send);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+            $scope.error = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    var send = function(response) {
+        weatherService.getCity(function(city, country) {
+            weatherService.getWeatherForecast(city, country).then(function (weatherResponse) {
+                $scope.message = 'Weather mostly ' + weatherResponse.data.info;
+                var ctx = document.getElementById("line").getContext("2d");
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: weatherResponse.data.data
+                });
+            });
+        }, response.coords.latitude, response.coords.longitude);
+    }
+
+    getWeatherInfo();
+
     if (authService.authentication.isAuth) {
         getFriendRequests();
     }
-    
+
 }]);

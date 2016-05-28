@@ -1,11 +1,16 @@
 'use strict';
-app.controller('tasksEditController', ['$rootScope', '$scope', '$location', 'tasksService', 'friendsService', 'authService', 'taskId', '$element', 'toastr',
-	function ($rootScope, $scope, $location, tasksService, friendsService, authService, taskId, $element, toastr) {
+app.controller('tasksEditController', ['$rootScope', '$scope', '$location', 'tasksService', 'friendsService', 'authService', 'taskId', '$element', 'toastr', 'weatherService',
+	function ($rootScope, $scope, $location, tasksService, friendsService, authService, taskId, $element, toastr, weatherService) {
 
 	$scope.title = 'New task';
+    $scope.showWeather = true;
+    $scope.weather = '- loading';
+
 	if (taskId != 0) {
 		$scope.title = 'Edit task';
+        $scope.showWeather = false;
 	}
+    
 	$scope.task = {};
 	$scope.friendsInTask = [];
 	$scope.friendsNotInTask = [];
@@ -31,11 +36,30 @@ app.controller('tasksEditController', ['$rootScope', '$scope', '$location', 'tas
             $scope.friendsInTask = response.data;
         });
     }
+
+    var getWeather = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(send);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+    var send = function(response) {
+        weatherService.getCity(function(city, country) {
+            weatherService.getWeather(city, country).then(function (weatherResponse) {
+                console.log(weatherResponse);
+                $scope.weather = weatherResponse.data;
+            });
+        }, response.coords.latitude, response.coords.longitude);
+    }
+
     if (taskId != 0) {
     	refreshTask();
     }
 	else {
 		initNewTask();
+        getWeather();
 	}
 
 	$scope.close = function() {
